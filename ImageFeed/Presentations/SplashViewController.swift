@@ -10,6 +10,8 @@ final class SplashViewController: UIViewController {
     // MARK: - View Life Cycles
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+//        UserDefaults.standard.removeObject(forKey: "bearerToken")
                         
         if oauth2TokenStorage.token != nil {
             print("We have a token")
