@@ -28,18 +28,28 @@ final class OAuth2Service {
         task?.cancel()
         lastCode = code
         
-        let request = makeRequest(code: code)
-        let task = urlSession.dataTask(with: request) { data, response, error in
-            DispatchQueue.main.async {                      // 12
-                completion(.success("")) // TODO [Sprint 10]// 13
-                self.task = nil                             // 14
-                if error != nil {                           // 15
-                    self.lastCode = nil                     // 16
-                }
+        let completionInMainThread: (Result<String, Error>) -> Void = { result in
+            DispatchQueue.main.async {
+                completion(result)
             }
         }
-        self.task = task                                    // 17
-        task.resume()                                       // 18
+        
+        let request = authTokenRequest(code: code)
+        let task = object(for: request) { [weak self] result in
+            guard let self = self else { return }
+            print(result)
+            switch result {
+            case .success(let body):
+                print("Success")
+                self.authToken = body.accessToken
+                completionInMainThread(.success(body.accessToken))
+            case .failure(let error):
+                print("Failure")
+                completionInMainThread(.failure(error))
+            }
+        }
+        self.task = task
+        task.resume()
     }
     
     private func makeRequest(code: String) -> URLRequest {
@@ -49,32 +59,6 @@ final class OAuth2Service {
         return request
     }
 }
-
-
-
-//        let completionInMainThread: (Result<String, Error>) -> Void = { result in
-//            DispatchQueue.main.async {
-//                completion(result)
-//            }
-//        }
-
-//        let request = authTokenRequest(code: code)
-//        let task = object(for: request) { [weak self] result in
-//            guard let self = self else { return }
-//            print(result)
-//            switch result {
-//            case .success(let body):
-//                print("Success")
-//                self.authToken = body.accessToken
-//                completionInMainThread(.success(body.accessToken))
-//            case .failure(let error):
-//                print("Failure")
-//                completionInMainThread(.failure(error))
-//            }
-//        }
-//        task.resume()
-//    }
-//}
 
 // MARK: - Extensions: private methods
 extension OAuth2Service {
