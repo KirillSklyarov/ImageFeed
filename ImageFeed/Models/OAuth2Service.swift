@@ -5,9 +5,12 @@ final class OAuth2Service {
     // MARK: - Public properties
     static let shared = OAuth2Service()
     private init() {}
-
+    
     // MARK: - Private properties
     private let urlSession = URLSession.shared
+    
+    private var task: URLSessionTask?
+    private var lastCode: String?
     
     private (set) var authToken: String? {
         get {
@@ -20,29 +23,58 @@ final class OAuth2Service {
     
     // MARK: - Public methods
     func fetchOAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
-        let completionInMainThread: (Result<String, Error>) -> Void = { result in
-            DispatchQueue.main.async {
-                completion(result)
-            }
-        }
+        assert(Thread.isMainThread)
+        if lastCode == code { return }
+        task?.cancel()
+        lastCode = code
         
-        let request = authTokenRequest(code: code)
-        let task = object(for: request) { [weak self] result in
-            guard let self = self else { return }
-            print(result)
-            switch result {
-            case .success(let body):
-                print("Success")
-                self.authToken = body.accessToken
-                completionInMainThread(.success(body.accessToken))
-            case .failure(let error):
-                print("Failure")
-                completionInMainThread(.failure(error))
+        let request = makeRequest(code: code)
+        let task = urlSession.dataTask(with: request) { data, response, error in
+            DispatchQueue.main.async {                      // 12
+                completion(.success("")) // TODO [Sprint 10]// 13
+                self.task = nil                             // 14
+                if error != nil {                           // 15
+                    self.lastCode = nil                     // 16
+                }
             }
         }
-        task.resume()
+        self.task = task                                    // 17
+        task.resume()                                       // 18
+    }
+    
+    private func makeRequest(code: String) -> URLRequest {
+        guard let url = URL(string: "...\(code)") else { fatalError("Failed to create URL") }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        return request
     }
 }
+
+
+
+//        let completionInMainThread: (Result<String, Error>) -> Void = { result in
+//            DispatchQueue.main.async {
+//                completion(result)
+//            }
+//        }
+
+//        let request = authTokenRequest(code: code)
+//        let task = object(for: request) { [weak self] result in
+//            guard let self = self else { return }
+//            print(result)
+//            switch result {
+//            case .success(let body):
+//                print("Success")
+//                self.authToken = body.accessToken
+//                completionInMainThread(.success(body.accessToken))
+//            case .failure(let error):
+//                print("Failure")
+//                completionInMainThread(.failure(error))
+//            }
+//        }
+//        task.resume()
+//    }
+//}
 
 // MARK: - Extensions: private methods
 extension OAuth2Service {

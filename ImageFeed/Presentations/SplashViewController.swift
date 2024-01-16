@@ -1,4 +1,5 @@
 import UIKit
+import ProgressHUD
 
 final class SplashViewController: UIViewController {
     
@@ -41,6 +42,7 @@ extension SplashViewController {
 // MARK: - Delegate
 extension SplashViewController: AuthViewControllerDelegate {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
+        UIBlockingProgressHUD.show()
         self.fetchOAuthToken(code)
     }
 }
@@ -61,8 +63,10 @@ extension SplashViewController {
             case .success:
                 print("Success")
                 self.switchToTabBarController()
+                UIBlockingProgressHUD.dismiss()
             case .failure:
                 print("Error")
+                UIBlockingProgressHUD.dismiss()
             }
         }
     }
