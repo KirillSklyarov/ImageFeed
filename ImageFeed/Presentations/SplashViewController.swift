@@ -7,15 +7,17 @@ final class SplashViewController: UIViewController {
     private let showAuthenticationScreenSegueIdentifier = "newsegue"
     private let oauth2Service = OAuth2Service.shared
     private let oauth2TokenStorage = OAuth2TokenStorage()
+    private let profileService = ProfileService.shared
     
     // MARK: - View Life Cycles
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-//        UserDefaults.standard.removeObject(forKey: "bearerToken")
-                        
+                UserDefaults.standard.removeObject(forKey: "bearerToken")
+        
         if oauth2TokenStorage.token != nil {
             print("We have a token")
+            //            profileService.fetchProfile(oauth2TokenStorage.token!) { _ in }
             switchToTabBarController()
         } else {
             print("We don't have a token")
@@ -42,8 +44,11 @@ extension SplashViewController {
 // MARK: - Delegate
 extension SplashViewController: AuthViewControllerDelegate {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
-        UIBlockingProgressHUD.show()
-        self.fetchOAuthToken(code)
+        dismiss(animated: true) { [weak self] in
+            guard let self = self else { return }
+            UIBlockingProgressHUD.show()
+            self.fetchOAuthToken(code)
+        }
     }
 }
 
@@ -56,17 +61,33 @@ extension SplashViewController {
         window.makeKeyAndVisible()
     }
     
+    // В этом методе мы только делаем переход в зависиомости от результата обработки запроса
     private func fetchOAuthToken(_ code: String) {
         oauth2Service.fetchOAuthToken(code) { [weak self] result in
             guard let self = self else { return }
             switch result {
-            case .success:
-                print("Success")
-                self.switchToTabBarController()
-                UIBlockingProgressHUD.dismiss()
+            case .success (let token):
+                self.fetchProfile(token: token)
+                //                self.profileService.fetchProfile(token)
+                //                self.switchToTabBarController()
+                //                UIBlockingProgressHUD.dismiss()
             case .failure:
-                print("Error")
                 UIBlockingProgressHUD.dismiss()
+            }
+        }
+    }
+    
+    private func fetchProfile(token: String) {
+        profileService.fetchProfile(token) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success:
+                UIBlockingProgressHUD.dismiss()
+                self.switchToTabBarController()
+            case .failure:
+                UIBlockingProgressHUD.dismiss()
+                // TODO [Sprint 11] Показать ошибку
+                break
             }
         }
     }

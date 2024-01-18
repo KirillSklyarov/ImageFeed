@@ -47,9 +47,12 @@ final class ProfileViewController: UIViewController {
         return button
     }()
     
+   private let profileService = ProfileService.shared
+    
     // MARK: - View Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
+        updateProfileDetails(profile: profileService.profile)
         
         view.addSubview(avatarImage)
         view.addSubview(nameLabel)
@@ -88,5 +91,13 @@ final class ProfileViewController: UIViewController {
         nameLabel.removeFromSuperview()
         nicknameLabel.removeFromSuperview()
         textLabel.removeFromSuperview()
+    }
+    
+    private func updateProfileDetails(profile: Profile?) {
+        guard let profile = profile else {
+            print("Не смогли получить данные профиля")
+            return }
+        nameLabel.text = profile.loginName
+        nicknameLabel.text = profile.userName
     }
 }

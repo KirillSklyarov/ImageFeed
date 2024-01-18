@@ -20,6 +20,8 @@
 		734433812B55C52E0081EFDB /* ProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 734433802B55C52E0081EFDB /* ProgressHUD */; };
 		734433832B5686FD0081EFDB /* UIBlockingProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734433822B5686FD0081EFDB /* UIBlockingProgressHUD.swift */; };
 		734433852B5692750081EFDB /* ProfileService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734433842B5692750081EFDB /* ProfileService.swift */; };
+		734433872B5920430081EFDB /* ProfileResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734433862B5920430081EFDB /* ProfileResult.swift */; };
+		734433892B59206B0081EFDB /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734433882B59206B0081EFDB /* Profile.swift */; };
 		736E793D2B32E2D200DFC9B5 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 736E793C2B32E2D200DFC9B5 /* ProfileViewController.swift */; };
 		736E79412B32F83500DFC9B5 /* SingleViewImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 736E79402B32F83500DFC9B5 /* SingleViewImageController.swift */; };
 		7382D3D22B42E73300D6CC0F /* OAuth2Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382D3D12B42E73300D6CC0F /* OAuth2Service.swift */; };
@@ -46,6 +48,8 @@
 		7330B6F92B3DDBC600D88C05 /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
 		734433822B5686FD0081EFDB /* UIBlockingProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIBlockingProgressHUD.swift; sourceTree = "<group>"; };
 		734433842B5692750081EFDB /* ProfileService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileService.swift; sourceTree = "<group>"; };
+		734433862B5920430081EFDB /* ProfileResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileResult.swift; sourceTree = "<group>"; };
+		734433882B59206B0081EFDB /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		736E793C2B32E2D200DFC9B5 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		736E79402B32F83500DFC9B5 /* SingleViewImageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleViewImageController.swift; sourceTree = "<group>"; };
 		7382D3D12B42E73300D6CC0F /* OAuth2Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2Service.swift; sourceTree = "<group>"; };
@@ -137,6 +141,16 @@
 			path = Authentification;
 			sourceTree = "<group>";
 		};
+		7344338A2B5920860081EFDB /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				734433882B59206B0081EFDB /* Profile.swift */,
+				734433862B5920430081EFDB /* ProfileResult.swift */,
+				734433842B5692750081EFDB /* ProfileService.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
 		736E793B2B32E2B300DFC9B5 /* ProfileView */ = {
 			isa = PBXGroup;
 			children = (
@@ -168,11 +182,11 @@
 		7382D3CF2B42E5BE00D6CC0F /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				7344338A2B5920860081EFDB /* Profile */,
 				7382D3D12B42E73300D6CC0F /* OAuth2Service.swift */,
 				7382D3DC2B42EA9800D6CC0F /* OAuth2TokenStorage.swift */,
 				7382D3DA2B42EA3C00D6CC0F /* NetworkErrors.swift */,
 				7382D3D62B42E90200D6CC0F /* OAuthTokenResponseBody.swift */,
-				734433842B5692750081EFDB /* ProfileService.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -264,7 +278,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				736E79412B32F83500DFC9B5 /* SingleViewImageController.swift in Sources */,
+				734433892B59206B0081EFDB /* Profile.swift in Sources */,
 				731402A32B1DC6C400FDBD5F /* ImagesListViewController.swift in Sources */,
+				734433872B5920430081EFDB /* ProfileResult.swift in Sources */,
 				7382D3D92B42E9FC00D6CC0F /* URLSession+Data.swift in Sources */,
 				7382D3DB2B42EA3C00D6CC0F /* NetworkErrors.swift in Sources */,
 				7382D3D72B42E90200D6CC0F /* OAuthTokenResponseBody.swift in Sources */,

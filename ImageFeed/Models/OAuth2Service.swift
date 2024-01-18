@@ -6,6 +6,7 @@ final class OAuth2Service {
     static let shared = OAuth2Service()
     private init() {}
     
+    
     // MARK: - Private properties
     private let urlSession = URLSession.shared
     
@@ -24,15 +25,10 @@ final class OAuth2Service {
     // MARK: - Public methods
     func fetchOAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
+        print("Мы проверяем есть ли действующий запрос")
         if lastCode == code { return }
         task?.cancel()
         lastCode = code
-        
-        let completionInMainThread: (Result<String, Error>) -> Void = { result in
-            DispatchQueue.main.async {
-                completion(result)
-            }
-        }
         
         let request = authTokenRequest(code: code)
         let task = object(for: request) { [weak self] result in
@@ -40,12 +36,12 @@ final class OAuth2Service {
             print(result)
             switch result {
             case .success(let body):
-                print("Success")
+                print("Ответ на запрос пришел успешный и мы сохранили authToken")
                 self.authToken = body.accessToken
-                completionInMainThread(.success(body.accessToken))
+                completion(.success(body.accessToken))
             case .failure(let error):
-                print("Failure")
-                completionInMainThread(.failure(error))
+                print("Ответ на запрос пришел c ошибкой и мы не сохранили authToken")
+                completion(.failure(error))
             }
         }
         self.task = task
@@ -77,6 +73,8 @@ extension OAuth2Service {
 }
 
 extension OAuth2Service {
+    // В этом методе мы обрабатываем результат полученного ответа
+    
     private func object(
         for request: URLRequest,
         completion: @escaping (Result<OAuthTokenResponseBody, Error>) -> Void
@@ -87,6 +85,7 @@ extension OAuth2Service {
             let response = result.flatMap { data -> Result<OAuthTokenResponseBody, Error> in
                 Result { try decoder.decode(OAuthTokenResponseBody.self, from: data) }
             }
+            print("Тут мы получаем ответ от сервера")
             completion(response)
         }
     }
