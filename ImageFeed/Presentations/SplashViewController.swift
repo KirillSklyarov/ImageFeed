@@ -9,12 +9,13 @@ final class SplashViewController: UIViewController {
     private let oauth2TokenStorage = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
-     
+    
+    
     // MARK: - View Life Cycles
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-//        UserDefaults.standard.removeObject(forKey: "bearerToken")
+        //        UserDefaults.standard.removeObject(forKey: "bearerToken")
         
         if oauth2TokenStorage.token != nil {
             print("We have a token")
@@ -77,17 +78,41 @@ extension SplashViewController {
     }
     
     private func fetchProfile(token: String) {
-        profileService.fetchProfile(token) { [weak self] result in
-            //            guard let self = self else { return }
+        //        profileService.fetchProfile(token) { [weak self] result in
+        profileService.fetchProfile(token) { [self] result in
+            //            guard let self = self else { fatalError("Вот тут проблема") }
+            //            UIBlockingProgressHUD.dismiss()
             switch result {
             case .success (let profile):
-                self?.switchToTabBarController()
-                ProfileImageService.shared.fetchProfileImageURL(username: profile.userName) { _ in }
+                //                self.switchToTabBarController()
+                //                self.profileImageService.fetchProfileImageURL(username: profile.userName) { _ in }
+                self.profileImageService.fetchProfileImageURL(username: profile.userName) { _ in }
+                
             case .failure:
                 UIBlockingProgressHUD.dismiss()
+                self.showAlert()
                 // TODO [Sprint 11] Показать ошибку
                 break
             }
+        }
+    }
+}
+
+extension SplashViewController {
+    
+    func showAlert() {
+        
+        let alertController = UIAlertController(
+            title: "Что-то пошло не так(",
+            message: "Не удалось войти в систему",
+            preferredStyle: .alert)
+        
+        let cancelAction = UIAlertAction(title: "ОК", style: .cancel)
+        
+        alertController.addAction(cancelAction)
+        
+        if let window = UIApplication.shared.windows.first {
+            window.rootViewController?.present(alertController, animated: true)
         }
     }
 }

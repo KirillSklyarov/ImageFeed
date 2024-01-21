@@ -24,6 +24,8 @@
 		734433892B59206B0081EFDB /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734433882B59206B0081EFDB /* Profile.swift */; };
 		7344338F2B5BCC4B0081EFDB /* ProfileImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7344338E2B5BCC4B0081EFDB /* ProfileImageService.swift */; };
 		734433912B5BCC840081EFDB /* UserResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734433902B5BCC840081EFDB /* UserResult.swift */; };
+		734433932B5D9D9C0081EFDB /* URLSessions+ObjectTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734433922B5D9D9C0081EFDB /* URLSessions+ObjectTask.swift */; };
+		734433972B5DAE260081EFDB /* AlertPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 734433962B5DAE260081EFDB /* AlertPresenter.swift */; };
 		736E793D2B32E2D200DFC9B5 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 736E793C2B32E2D200DFC9B5 /* ProfileViewController.swift */; };
 		736E79412B32F83500DFC9B5 /* SingleViewImageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 736E79402B32F83500DFC9B5 /* SingleViewImageController.swift */; };
 		7382D3D22B42E73300D6CC0F /* OAuth2Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7382D3D12B42E73300D6CC0F /* OAuth2Service.swift */; };
@@ -54,6 +56,8 @@
 		734433882B59206B0081EFDB /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		7344338E2B5BCC4B0081EFDB /* ProfileImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileImageService.swift; sourceTree = "<group>"; };
 		734433902B5BCC840081EFDB /* UserResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserResult.swift; sourceTree = "<group>"; };
+		734433922B5D9D9C0081EFDB /* URLSessions+ObjectTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSessions+ObjectTask.swift"; sourceTree = "<group>"; };
+		734433962B5DAE260081EFDB /* AlertPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertPresenter.swift; sourceTree = "<group>"; };
 		736E793C2B32E2D200DFC9B5 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		736E79402B32F83500DFC9B5 /* SingleViewImageController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleViewImageController.swift; sourceTree = "<group>"; };
 		7382D3D12B42E73300D6CC0F /* OAuth2Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuth2Service.swift; sourceTree = "<group>"; };
@@ -125,6 +129,7 @@
 		731402B72B1E4DB800FDBD5F /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				734433952B5DAE130081EFDB /* AlertPresenter */,
 				7330B6F32B3DBC3800D88C05 /* Constants.swift */,
 				734433822B5686FD0081EFDB /* UIBlockingProgressHUD.swift */,
 				7382D3D32B42E7C100D6CC0F /* Extensions */,
@@ -184,6 +189,24 @@
 			path = ProfileImage;
 			sourceTree = "<group>";
 		};
+		734433942B5D9DC00081EFDB /* URLSessions */ = {
+			isa = PBXGroup;
+			children = (
+				734433922B5D9D9C0081EFDB /* URLSessions+ObjectTask.swift */,
+				7382D3D82B42E9FC00D6CC0F /* URLSession+Data.swift */,
+				7382D3D42B42E7D200D6CC0F /* URLSession+makeHTTP.swift */,
+			);
+			path = URLSessions;
+			sourceTree = "<group>";
+		};
+		734433952B5DAE130081EFDB /* AlertPresenter */ = {
+			isa = PBXGroup;
+			children = (
+				734433962B5DAE260081EFDB /* AlertPresenter.swift */,
+			);
+			path = AlertPresenter;
+			sourceTree = "<group>";
+		};
 		736E793B2B32E2B300DFC9B5 /* ProfileView */ = {
 			isa = PBXGroup;
 			children = (
@@ -224,8 +247,7 @@
 		7382D3D32B42E7C100D6CC0F /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				7382D3D42B42E7D200D6CC0F /* URLSession+makeHTTP.swift */,
-				7382D3D82B42E9FC00D6CC0F /* URLSession+Data.swift */,
+				734433942B5D9DC00081EFDB /* URLSessions */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -328,7 +350,9 @@
 				7330B6FA2B3DDBC600D88C05 /* WebViewViewController.swift in Sources */,
 				731402A12B1DC6C400FDBD5F /* SceneDelegate.swift in Sources */,
 				7382D3DF2B432DA100D6CC0F /* SplashViewController.swift in Sources */,
+				734433932B5D9D9C0081EFDB /* URLSessions+ObjectTask.swift in Sources */,
 				734433832B5686FD0081EFDB /* UIBlockingProgressHUD.swift in Sources */,
+				734433972B5DAE260081EFDB /* AlertPresenter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
