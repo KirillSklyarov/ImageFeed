@@ -8,16 +8,17 @@ final class SplashViewController: UIViewController {
     private let oauth2Service = OAuth2Service.shared
     private let oauth2TokenStorage = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
-    
+    private let profileImageService = ProfileImageService.shared
+     
     // MARK: - View Life Cycles
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-                UserDefaults.standard.removeObject(forKey: "bearerToken")
+//        UserDefaults.standard.removeObject(forKey: "bearerToken")
         
         if oauth2TokenStorage.token != nil {
             print("We have a token")
-            //            profileService.fetchProfile(oauth2TokenStorage.token!) { _ in }
+            self.fetchProfile(token: oauth2TokenStorage.token!)
             switchToTabBarController()
         } else {
             print("We don't have a token")
@@ -68,9 +69,7 @@ extension SplashViewController {
             switch result {
             case .success (let token):
                 self.fetchProfile(token: token)
-                //                self.profileService.fetchProfile(token)
-                //                self.switchToTabBarController()
-                //                UIBlockingProgressHUD.dismiss()
+                UIBlockingProgressHUD.dismiss()
             case .failure:
                 UIBlockingProgressHUD.dismiss()
             }
@@ -79,11 +78,11 @@ extension SplashViewController {
     
     private func fetchProfile(token: String) {
         profileService.fetchProfile(token) { [weak self] result in
-            guard let self = self else { return }
+            //            guard let self = self else { return }
             switch result {
-            case .success:
-                UIBlockingProgressHUD.dismiss()
-                self.switchToTabBarController()
+            case .success (let profile):
+                self?.switchToTabBarController()
+                ProfileImageService.shared.fetchProfileImageURL(username: profile.userName) { _ in }
             case .failure:
                 UIBlockingProgressHUD.dismiss()
                 // TODO [Sprint 11] Показать ошибку

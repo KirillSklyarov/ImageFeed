@@ -9,7 +9,7 @@ final class UIBlockingProgressHUD {
     
     static func show() {
         window?.isUserInteractionEnabled = false
-        ProgressHUD.progress("Pictures are loading", 2.0)
+        ProgressHUD.progress("Pictures are loading", 1.0)
         ProgressHUD.colorProgress = .ypRed
     }
     

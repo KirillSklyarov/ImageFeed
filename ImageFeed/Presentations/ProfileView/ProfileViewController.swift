@@ -9,6 +9,8 @@ final class ProfileViewController: UIViewController {
         let image = UIImageView()
         image.image = UIImage(named: "Photo")
         image.tintColor = .gray
+        image.layer.cornerRadius = avatarImageSize / 2
+        image.clipsToBounds = true
         return image
     }()
     
@@ -47,12 +49,25 @@ final class ProfileViewController: UIViewController {
         return button
     }()
     
-   private let profileService = ProfileService.shared
+    private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - View Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        profileImageServiceObserver = NotificationCenter.default.addObserver(
+            forName: ProfileImageService.DidChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            self.updateProfileImage()
+        }
+        
         updateProfileDetails(profile: profileService.profile)
+        updateProfileImage()
         
         view.addSubview(avatarImage)
         view.addSubview(nameLabel)
@@ -100,4 +115,39 @@ final class ProfileViewController: UIViewController {
         nameLabel.text = profile.loginName
         nicknameLabel.text = profile.userName
     }
+    
+    private func updateProfileImage() {
+        guard let avatar = URL(string: profileImageService.avatarURL!) else { fatalError("Пришлa пустая ссылка на аватарку")}
+        
+        downloadImage(from: avatar) { image in
+            if let image = image {
+                // Действия с загруженным изображением
+                DispatchQueue.main.async {
+                    // Ваш код для обновления интерфейса с использованием изображения
+                    // Например, установка изображения в UIImageView
+                    self.avatarImage.image = image
+                }
+            } else {
+                print("Не удалось загрузить изображение.")
+            }
+        }
+    }
+    
+    private func downloadImage(from url: URL, completion: @escaping (UIImage?) -> Void) {
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print("Ошибка загрузки данных: \(error.localizedDescription)")
+                completion(nil)
+                return
+            }
+            
+            if let data = data, let image = UIImage(data: data) {
+                completion(image)
+            } else {
+                print("Не удалось создать изображение из загруженных данных.")
+                completion(nil)
+            }
+        }.resume()
+    }
+    
 }
