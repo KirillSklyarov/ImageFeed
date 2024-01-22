@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
@@ -117,37 +118,7 @@ final class ProfileViewController: UIViewController {
     }
     
     private func updateProfileImage() {
-        guard let avatar = URL(string: profileImageService.avatarURL!) else { fatalError("Пришлa пустая ссылка на аватарку")}
-        
-        downloadImage(from: avatar) { image in
-            if let image = image {
-                // Действия с загруженным изображением
-                DispatchQueue.main.async {
-                    // Ваш код для обновления интерфейса с использованием изображения
-                    // Например, установка изображения в UIImageView
-                    self.avatarImage.image = image
-                }
-            } else {
-                print("Не удалось загрузить изображение.")
-            }
-        }
+        guard let avatarURL = URL(string: profileImageService.avatarURL!) else { fatalError("Пришлa пустая ссылка на аватарку")}
+        avatarImage.kf.setImage(with: avatarURL, placeholder: UIImage(named: "placeholder"))
     }
-    
-    private func downloadImage(from url: URL, completion: @escaping (UIImage?) -> Void) {
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                print("Ошибка загрузки данных: \(error.localizedDescription)")
-                completion(nil)
-                return
-            }
-            
-            if let data = data, let image = UIImage(data: data) {
-                completion(image)
-            } else {
-                print("Не удалось создать изображение из загруженных данных.")
-                completion(nil)
-            }
-        }.resume()
-    }
-    
 }
