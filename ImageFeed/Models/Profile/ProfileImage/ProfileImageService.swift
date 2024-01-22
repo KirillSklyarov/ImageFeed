@@ -17,7 +17,6 @@ final class ProfileImageService {
         print("Раздел Аватарки - делаем запрос")
         
         guard task == nil else { fatalError("Тут у нас не завершился предыдущий процесс") }
-        
         guard let token = token else { fatalError("При попытке запросить аватарку token = nil")}
         
         let request = makeProfileImageRequest(userName: username, token: token)

@@ -6,18 +6,14 @@ final class ProfileService {
     private init() {}
     
     private let urlSession = URLSession.shared
-    
     private var task: URLSessionTask?
-//    private var lastCode: String?
-    
     private(set) var profile: Profile?
     
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         assert(Thread.isMainThread)
         print("Раздел Профиля - мы проверяем есть ли действующий запрос")
-        guard task == nil else { fatalError("Ну хер знает что") }
-        //        task?.cancel()
-        //        lastCode = token
+        guard task == nil else { return } //fatalError("Ну хер знает что") }
+        task?.cancel()
         
         let request = makeProfileRequest(token: token)
         print("Запрос на данные профиля успешно создан")

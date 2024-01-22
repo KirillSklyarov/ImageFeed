@@ -113,8 +113,8 @@ final class ProfileViewController: UIViewController {
         guard let profile = profile else {
             print("Не смогли получить данные профиля")
             return }
-        nameLabel.text = profile.loginName
-        nicknameLabel.text = profile.userName
+        nameLabel.text = profile.name
+        nicknameLabel.text = profile.loginName
     }
     
     private func updateProfileImage() {

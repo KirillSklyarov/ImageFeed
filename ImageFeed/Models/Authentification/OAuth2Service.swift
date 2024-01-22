@@ -24,7 +24,7 @@ final class OAuth2Service {
     // MARK: - Public methods
     func fetchOAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
-        print("Мы проверяем есть ли действующий запрос")
+//        print("Мы проверяем есть ли действующий запрос")
         if lastCode == code { return }
         task?.cancel()
         lastCode = code
@@ -33,14 +33,19 @@ final class OAuth2Service {
         let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) -> Void in
             guard let self = self else { return }
             print(result)
-            switch result {
-            case .success(let body):
-                print("Ответ на запрос пришел успешный и мы сохранили authToken")
-                self.authToken = body.accessToken
-                completion(.success(body.accessToken))
-            case .failure(let error):
-                print("Ответ на запрос пришел c ошибкой и мы не сохранили authToken")
-                completion(.failure(error))
+            DispatchQueue.main.async {
+                switch result {
+                case .success(let body):
+                    print("Ответ на запрос пришел успешный и мы сохранили authToken")
+                    self.authToken = body.accessToken
+                    completion(.success(body.accessToken))
+                case .failure(let error):
+                    print("Ответ на запрос пришел c ошибкой и мы не сохранили authToken")
+                    SplashViewController().showAlert()
+                    completion(.failure(error))
+                    self.lastCode = nil
+                }
+                self.task = nil
             }
         }
         self.task = task
