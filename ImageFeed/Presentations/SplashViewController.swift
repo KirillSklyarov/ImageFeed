@@ -31,11 +31,11 @@ final class SplashViewController: UIViewController {
 //        KeychainWrapper.standard.removeObject(forKey: "bearerToken")
         
         if oauth2TokenStorage.token != nil {
-            print("We have a token")
+            print("✅ Токен найден. Нужно только обновить данные из профиля и аватарку.")
             self.fetchProfile(token: oauth2TokenStorage.token!)
             self.switchToTabBarController()
         } else {
-            print("We don't have a token")
+            print("🔴 Токен не найден. Нужно пройти аутентификацию.")
             showAuthController()
         }
     }
@@ -83,7 +83,7 @@ extension SplashViewController {
             switch result {
             case .success (let token):
                 self.fetchProfile(token: token)
-                UIBlockingProgressHUD.dismiss()
+//                UIBlockingProgressHUD.dismiss()
             case .failure:
                 self.showAlert()
                 UIBlockingProgressHUD.dismiss()
@@ -92,12 +92,16 @@ extension SplashViewController {
     }
     
     private func fetchProfile(token: String) {
-        profileService.fetchProfile(token) { [self] result in
-//            guard let self = self else { return }
-            UIBlockingProgressHUD.dismiss()
+        profileService.fetchProfile(token) { [weak self] result in
+            guard let self = self else {
+                print("🔴🔴🔴 Опять тут проблема")
+                return }
+//            UIBlockingProgressHUD.dismiss()
             switch result {
             case .success (let profile):
-                ProfileImageService.shared.fetchProfileImageURL(username: profile.userName) { _ in }
+//                self.profileImageService.fetchProfileImageURL(
+//                    username: profile.userName,
+//                    token: oauth2TokenStorage.token!) {_ in }
                 self.switchToTabBarController()
             case .failure:
                 UIBlockingProgressHUD.dismiss()
@@ -108,15 +112,19 @@ extension SplashViewController {
     }
 }
 
+//extension SplashViewController {
+//    func fetchProfileImage(username: String, token: String) {
+//        profileImageService.fetchProfileImageURL(username: username, token: token) { _ in }
+//    }
+//}
+
 extension SplashViewController {
     
     func showAlert() {
-        
         let alertController = UIAlertController(
             title: "Что-то пошло не так(",
             message: "Не удалось войти в систему",
             preferredStyle: .alert)
-        
         let cancelAction = UIAlertAction(title: "ОК", style: .cancel)
         alertController.addAction(cancelAction)
         

@@ -58,6 +58,8 @@ final class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = .ypBackground
+        
         profileImageServiceObserver = NotificationCenter.default.addObserver(
             forName: ProfileImageService.DidChangeNotification,
             object: nil,

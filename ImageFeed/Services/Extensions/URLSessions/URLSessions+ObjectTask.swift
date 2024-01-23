@@ -11,7 +11,7 @@ extension URLSession {
             let response = result.flatMap { data -> Result<T, Error> in
                 Result { try decoder.decode(T.self, from: data) }
             }
-            print("Тут мы получаем ответ от сервера")
+//            print("Тут мы получаем ответ от сервера")
             completion(response)
         }
     }

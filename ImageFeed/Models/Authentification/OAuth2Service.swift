@@ -32,16 +32,16 @@ final class OAuth2Service {
         let request = authTokenRequest(code: code)
         let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) -> Void in
             guard let self = self else { return }
-            print(result)
+//            print(result)
             DispatchQueue.main.async {
                 switch result {
                 case .success(let body):
-                    print("Ответ на запрос пришел успешный и мы сохранили authToken")
+                    print("✅ Ответ на запрос пришел успешный и мы сохранили authToken")
                     self.authToken = body.accessToken
                     completion(.success(body.accessToken))
                 case .failure(let error):
-                    print("Ответ на запрос пришел c ошибкой и мы не сохранили authToken")
-                    SplashViewController().showAlert()
+                    print("🔴 Ответ на запрос пришел c ошибкой и мы не сохранили authToken")
+//                    controller().showAlert()
                     completion(.failure(error))
                     self.lastCode = nil
                 }

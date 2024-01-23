@@ -56,8 +56,7 @@ extension AuthViewController: WebViewControllerDelegate {
 extension AuthViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showWebViewSegueIdentifier {
-            guard
-                let webViewViewController = segue.destination as? WebViewViewController
+            guard let webViewViewController = segue.destination as? WebViewViewController
             else { fatalError("Failed to prepare for \(showWebViewSegueIdentifier)") }
             webViewViewController.delegate = self
         } else {
