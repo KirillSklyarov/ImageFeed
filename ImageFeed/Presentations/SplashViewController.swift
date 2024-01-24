@@ -10,6 +10,8 @@ final class SplashViewController: UIViewController {
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
     
+    weak var authViewController: AuthViewController?
+    
     private lazy var splashImage: UIImageView = {
         let image = UIImageView()
         image.image = UIImage(named: "vector")
@@ -21,19 +23,22 @@ final class SplashViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         
-        view.backgroundColor = .yellow
+        view.backgroundColor = .ypBlack
         view.addSubview(splashImage)
         NSLayoutConstraint.activate([
             splashImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             splashImage.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
         
-//        KeychainWrapper.standard.removeObject(forKey: "bearerToken")
+        let authKey = "auth24"
+        if !UserDefaults.standard.bool(forKey: authKey) {
+            KeychainWrapper.standard.removeObject(forKey: "bearerToken")
+            UserDefaults.standard.setValue(true, forKey: authKey)
+        }
         
         if oauth2TokenStorage.token != nil {
             print("✅ Токен найден. Нужно только обновить данные из профиля и аватарку.")
             self.fetchProfile(token: oauth2TokenStorage.token!)
-            self.switchToTabBarController()
         } else {
             print("🔴 Токен не найден. Нужно пройти аутентификацию.")
             showAuthController()
@@ -50,6 +55,7 @@ extension SplashViewController {
         guard let vc = vc as? AuthViewController else {
             fatalError("Не могу создать AuthViewController")
         }
+        authViewController = vc
         vc.delegate = self
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true)
@@ -60,10 +66,8 @@ extension SplashViewController {
 extension SplashViewController: AuthViewControllerDelegate {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
         UIBlockingProgressHUD.show()
-        dismiss(animated: true) { [weak self] in
-            guard let self = self else { return }
-            self.fetchOAuthToken(code)
-        }
+        UIBlockingProgressHUD.dismiss()
+        self.fetchOAuthToken(code)
     }
 }
 
@@ -83,51 +87,26 @@ extension SplashViewController {
             switch result {
             case .success (let token):
                 self.fetchProfile(token: token)
-//                UIBlockingProgressHUD.dismiss()
             case .failure:
-                self.showAlert()
-                UIBlockingProgressHUD.dismiss()
+                authViewController?.showAlert()
             }
         }
     }
     
     private func fetchProfile(token: String) {
         profileService.fetchProfile(token) { [weak self] result in
-            guard let self = self else {
-                print("🔴🔴🔴 Опять тут проблема")
-                return }
-//            UIBlockingProgressHUD.dismiss()
+            guard let self = self else { return }
             switch result {
             case .success (let profile):
-//                self.profileImageService.fetchProfileImageURL(
-//                    username: profile.userName,
-//                    token: oauth2TokenStorage.token!) {_ in }
+                self.profileImageService.fetchProfileImageURL(
+                    username: profile.userName,
+                    token: oauth2TokenStorage.token!) {_ in }
                 self.switchToTabBarController()
             case .failure:
                 UIBlockingProgressHUD.dismiss()
-                showAlert()
+                authViewController?.showAlert()
                 break
             }
         }
-    }
-}
-
-//extension SplashViewController {
-//    func fetchProfileImage(username: String, token: String) {
-//        profileImageService.fetchProfileImageURL(username: username, token: token) { _ in }
-//    }
-//}
-
-extension SplashViewController {
-    
-    func showAlert() {
-        let alertController = UIAlertController(
-            title: "Что-то пошло не так(",
-            message: "Не удалось войти в систему",
-            preferredStyle: .alert)
-        let cancelAction = UIAlertAction(title: "ОК", style: .cancel)
-        alertController.addAction(cancelAction)
-        
-        present(alertController, animated: true)
     }
 }

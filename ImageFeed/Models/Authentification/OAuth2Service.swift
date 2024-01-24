@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 final class OAuth2Service {
     
@@ -24,7 +25,12 @@ final class OAuth2Service {
     // MARK: - Public methods
     func fetchOAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
-//        print("Мы проверяем есть ли действующий запрос")
+        print("""
+        ---------------------------------------------------------
+                Раздел Аутентификации - запрашиваем токен
+        ---------------------------------------------------------
+        """)
+        
         if lastCode == code { return }
         task?.cancel()
         lastCode = code
@@ -32,7 +38,6 @@ final class OAuth2Service {
         let request = authTokenRequest(code: code)
         let task = urlSession.objectTask(for: request) { [weak self] (result: Result<OAuthTokenResponseBody, Error>) -> Void in
             guard let self = self else { return }
-//            print(result)
             DispatchQueue.main.async {
                 switch result {
                 case .success(let body):
@@ -41,7 +46,6 @@ final class OAuth2Service {
                     completion(.success(body.accessToken))
                 case .failure(let error):
                     print("🔴 Ответ на запрос пришел c ошибкой и мы не сохранили authToken")
-//                    controller().showAlert()
                     completion(.failure(error))
                     self.lastCode = nil
                 }
@@ -50,13 +54,6 @@ final class OAuth2Service {
         }
         self.task = task
         task.resume()
-    }
-    
-    private func makeRequest(code: String) -> URLRequest {
-        guard let url = URL(string: "...\(code)") else { fatalError("Failed to create URL") }
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        return request
     }
 }
 
@@ -73,5 +70,12 @@ extension OAuth2Service {
             httpMethod: "POST",
             baseURL: URL(string: "https://unsplash.com")!
         )
+    }
+    
+    private func makeRequest(code: String) -> URLRequest {
+        guard let url = URL(string: "...\(code)") else { fatalError("Failed to create URL") }
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        return request
     }
 }

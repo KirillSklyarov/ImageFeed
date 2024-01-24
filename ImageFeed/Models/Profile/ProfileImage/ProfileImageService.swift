@@ -2,27 +2,28 @@ import Foundation
 
 final class ProfileImageService {
     
+    // MARK: - Public properties
     static let shared = ProfileImageService()
     private init() {}
     
+    static let DidChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
+    
+    // MARK: - Private properties
     private (set) var avatarURL: String?
     private var task: URLSessionTask?
     private let token = OAuth2TokenStorage().token
     private let urlSession = URLSession.shared
-    
-    static let DidChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
-    
+     
+    // MARK: - Public methods
     func fetchProfileImageURL(username: String, token: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
         print("""
-    ---------------------------------------------------------
-               Раздел Аватарки - делаем запрос
-    ---------------------------------------------------------
-    """)
-           
-        guard task == nil else { fatalError("Тут у нас не завершился предыдущий процесс") }
-//        guard let token = token else { fatalError("При попытке запросить аватарку token = nil")}
+        ---------------------------------------------------------
+                   Раздел Аватарки - запрашиваем аватарку
+        ---------------------------------------------------------
+        """)
         
+        guard task == nil else { fatalError("Тут у нас не завершился предыдущий процесс") }
         let request = makeProfileImageRequest(userName: username, token: token)
         print("✅ Запрос на данные аватарки успешно создан")
         let task = urlSession.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) -> Void in
@@ -47,6 +48,7 @@ final class ProfileImageService {
         task.resume()
     }
     
+    // MARK: - Private methods
     private func makeProfileImageRequest(userName: String, token: String) -> URLRequest {
         var request = URLRequest.makeHTTPRequest(path: "/users/\(userName)", httpMethod: "GET")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")

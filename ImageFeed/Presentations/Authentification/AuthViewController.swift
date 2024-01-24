@@ -12,6 +12,8 @@ final class AuthViewController: UIViewController {
     // MARK: - Public Properties
     weak var delegate: AuthViewControllerDelegate?
     
+    weak var webViewController: WebViewViewController?
+    
     lazy var authLogo: UIImageView = {
         let image = UIImageView()
         image.image = UIImage(named: "Vector-Auth")
@@ -39,6 +41,19 @@ final class AuthViewController: UIViewController {
     // MARK: - IB Actions
     @IBAction func buttonTapped(_ sender: Any) {
     }
+    
+    func showAlert() {
+        webViewController?.dismiss(animated: false)
+        
+        let alertController = UIAlertController(
+            title: "Что-то пошло не так(",
+            message: "Не удалось войти в систему",
+            preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "ОК", style: .cancel)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true)
+    }
 }
 
 // MARK: - Delegate
@@ -58,6 +73,7 @@ extension AuthViewController {
         if segue.identifier == showWebViewSegueIdentifier {
             guard let webViewViewController = segue.destination as? WebViewViewController
             else { fatalError("Failed to prepare for \(showWebViewSegueIdentifier)") }
+            webViewController = webViewViewController
             webViewViewController.delegate = self
         } else {
             super.prepare(for: segue, sender: sender)

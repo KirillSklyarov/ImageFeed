@@ -2,22 +2,24 @@ import Foundation
 
 final class ProfileService {
     
+    // MARK: - Public properties
     static let shared = ProfileService()
     private init() {}
     
+    // MARK: - Private properties
     private let urlSession = URLSession.shared
     private var task: URLSessionTask?
     private(set) var profile: Profile?
     
+    // MARK: - Public methods
     func fetchProfile(_ token: String, completion: @escaping (Result<Profile, Error>) -> Void) {
         assert(Thread.isMainThread)
+        guard task == nil else { return }
         print("""
----------------------------------------------------------
-Раздел Профиля - мы проверяем есть ли действующий запрос
----------------------------------------------------------
-""")
-        guard task == nil else { return } //fatalError("Ну хер знает что") }
-//        task?.cancel()
+        ---------------------------------------------------------
+              Раздел Профиля - запрашиваем данные по профилю
+        ---------------------------------------------------------
+        """)
         
         let request = makeProfileRequest(token: token)
         print("✅ Запрос на данные профиля успешно создан")
