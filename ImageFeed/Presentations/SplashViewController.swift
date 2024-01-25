@@ -1,44 +1,71 @@
 import UIKit
+import SwiftKeychainWrapper
+import ProgressHUD
 
 final class SplashViewController: UIViewController {
     
+    // MARK: - Public Properties
+    weak var authViewController: AuthViewController?
+    
     // MARK: - Private properties
-    private let showAuthenticationScreenSegueIdentifier = "newsegue"
     private let oauth2Service = OAuth2Service.shared
     private let oauth2TokenStorage = OAuth2TokenStorage()
+    private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
+        
+    private lazy var splashImage: UIImageView = {
+        let image = UIImageView()
+        image.image = UIImage(named: "vector")
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
     
     // MARK: - View Life Cycles
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-                        
-        if oauth2TokenStorage.token != nil {
-            print("We have a token")
-            switchToTabBarController()
+        
+        view.backgroundColor = .ypBlack
+        view.addSubview(splashImage)
+        NSLayoutConstraint.activate([
+            splashImage.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            splashImage.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+        
+//        let authKey = "auth27"
+//        if !UserDefaults.standard.bool(forKey: authKey) {
+//            KeychainWrapper.standard.removeObject(forKey: "bearerToken")
+//            UserDefaults.standard.setValue(true, forKey: authKey)
+//        }
+        
+        if let token = oauth2TokenStorage.token {
+            fetchProfile(token: token)
         } else {
-            print("We don't have a token")
-            performSegue(withIdentifier: showAuthenticationScreenSegueIdentifier, sender: nil)
+            showAuthController()
         }
     }
 }
 
 // MARK: - Navigation
 extension SplashViewController {
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == showAuthenticationScreenSegueIdentifier {
-            guard let navigationController = segue.destination as? UINavigationController,
-                  let viewController = navigationController.viewControllers[0] as? AuthViewController else {
-                fatalError("Failed to prepare for \(showAuthenticationScreenSegueIdentifier)")
-            }
-            viewController.delegate = self
-        } else {
-            super.prepare(for: segue, sender: sender)
+    func showAuthController() {
+        let storyboard = UIStoryboard(name: "Main", bundle: .main)
+        let vc = storyboard.instantiateViewController(withIdentifier: "AuthViewController")
+        
+        guard let vc = vc as? AuthViewController else {
+            fatalError("Не могу создать AuthViewController")
         }
+        authViewController = vc
+        vc.delegate = self
+        vc.modalPresentationStyle = .fullScreen
+        present(vc, animated: true)
     }
 }
 
 // MARK: - Delegate
 extension SplashViewController: AuthViewControllerDelegate {
     func authViewController(_ vc: AuthViewController, didAuthenticateWithCode code: String) {
+        UIBlockingProgressHUD.show()
+        UIBlockingProgressHUD.dismiss()
         self.fetchOAuthToken(code)
     }
 }
@@ -46,21 +73,40 @@ extension SplashViewController: AuthViewControllerDelegate {
 // MARK: - Private Methods
 extension SplashViewController {
     private func switchToTabBarController() {
-        guard let window = UIApplication.shared.windows.first else { fatalError("Invalid Configuration") }
-        let tabBarController = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(identifier: "TabBarViewController")
+        guard let window = UIApplication.shared.windows.first,
+              let tabBarController = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(identifier: "TabBarViewController") as? TabBarController else { fatalError("Invalid Configuration") }
         window.rootViewController = tabBarController
         window.makeKeyAndVisible()
     }
     
+    // В этом методе мы только делаем переход в зависиомости от результата обработки запроса
     private func fetchOAuthToken(_ code: String) {
         oauth2Service.fetchOAuthToken(code) { [weak self] result in
             guard let self = self else { return }
             switch result {
-            case .success:
-                print("Success")
+            case .success (let token):
+                self.fetchProfile(token: token)
+            case .failure:
+                authViewController?.showAlert()
+            }
+        }
+    }
+    
+    private func fetchProfile(token: String) {
+        profileService.fetchProfile(token) { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success (let profile):
+                self.profileImageService.fetchProfileImageURL(
+                    username: profile.userName,
+                    token: token) {_ in }
+                
+//                oauth2TokenStorage.token!
                 self.switchToTabBarController()
             case .failure:
-                print("Error")
+                UIBlockingProgressHUD.dismiss()
+                authViewController?.showAlert()
+                break
             }
         }
     }

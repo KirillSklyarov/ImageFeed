@@ -1,4 +1,5 @@
 import UIKit
+import Kingfisher
 
 final class ProfileViewController: UIViewController {
     
@@ -9,6 +10,8 @@ final class ProfileViewController: UIViewController {
         let image = UIImageView()
         image.image = UIImage(named: "Photo")
         image.tintColor = .gray
+        image.layer.cornerRadius = avatarImageSize / 2
+        image.clipsToBounds = true
         return image
     }()
     
@@ -47,9 +50,27 @@ final class ProfileViewController: UIViewController {
         return button
     }()
     
+    private let profileService = ProfileService.shared
+    private let profileImageService = ProfileImageService.shared
+    private var profileImageServiceObserver: NSObjectProtocol?
+    
     // MARK: - View Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        view.backgroundColor = .ypBackground
+        
+        profileImageServiceObserver = NotificationCenter.default.addObserver(
+            forName: ProfileImageService.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            self.updateProfileImage()
+        }
+        
+        updateProfileDetails(profile: profileService.profile)
+        updateProfileImage()
         
         view.addSubview(avatarImage)
         view.addSubview(nameLabel)
@@ -88,5 +109,20 @@ final class ProfileViewController: UIViewController {
         nameLabel.removeFromSuperview()
         nicknameLabel.removeFromSuperview()
         textLabel.removeFromSuperview()
+    }
+    
+    private func updateProfileDetails(profile: Profile?) {
+        guard let profile = profile else {
+            print("Не смогли получить данные профиля")
+            return }
+        nameLabel.text = profile.name
+        nicknameLabel.text = profile.loginName
+    }
+    
+    private func updateProfileImage() {
+        guard let imageURL = profileImageService.avatarURL,
+              let avatarURL = URL(string: imageURL) else { fatalError("Пришлa пустая ссылка на аватарку")}
+        
+        avatarImage.kf.setImage(with: avatarURL, placeholder: UIImage(named: "placeholder"))
     }
 }

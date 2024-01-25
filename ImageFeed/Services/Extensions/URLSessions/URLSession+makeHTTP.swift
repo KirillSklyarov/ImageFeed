@@ -4,15 +4,13 @@ extension URLRequest {
     static func makeHTTPRequest(
         path: String,
         httpMethod: String,
-        baseURL: URL?
+        baseURL: URL? = Constants.defaultBaseURL
     ) -> URLRequest {
-        if let baseURL = Constants.defaultBaseURL,
-           let requestURL = URL(string: path, relativeTo: baseURL) {
-            var request = URLRequest(url: requestURL)
+        if let url = URL(string: path, relativeTo: baseURL) {
+            var request = URLRequest(url: url)
             request.httpMethod = httpMethod
             return request
         } else {
-            print("Ошибка: baseURL or requestURL равен nil")
             return URLRequest(url: URL(string: "about:blank")!)
         }
     }

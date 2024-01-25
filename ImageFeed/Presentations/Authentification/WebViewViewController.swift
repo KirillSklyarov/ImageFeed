@@ -19,12 +19,14 @@ final class WebViewViewController: UIViewController {
     
     // MARK: - Private properties
     private let identitfier = "WebViewViewController"
-    
+    private var estimatedProgressObservation: NSKeyValueObservation?
     
     // MARK: - View Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
         webView.navigationDelegate = self
+        
+        progressObservation()
         
         guard var urlComponents = URLComponents(string: UnsplashAuthorizeURLString) else {
             print("Failed to create components")
@@ -45,34 +47,29 @@ final class WebViewViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        webView.addObserver(
-            self,
-            forKeyPath: #keyPath(WKWebView.estimatedProgress),
-            options: .new,
-            context: nil)
-        
         updateProgress()
-        
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), context: nil)
-    }
+    //    func startActivity() {
+    //    }
+    
+    //    override func viewDidDisappear(_ animated: Bool) {
+    //        super.viewDidDisappear(animated)
+    ////        webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), context: nil)
+    //    }
     
     // MARK: - Overrides Methods
-    override func observeValue(
-        forKeyPath keyPath: String?,
-        of object: Any?,
-        change: [NSKeyValueChangeKey : Any]?,
-        context: UnsafeMutableRawPointer?) {
-            if keyPath == #keyPath(WKWebView.estimatedProgress) {
-                updateProgress()
-            } else {
-                super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-            }
-        }
+    //    override func observeValue(
+    //        forKeyPath keyPath: String?,
+    //        of object: Any?,
+    //        change: [NSKeyValueChangeKey : Any]?,
+    //        context: UnsafeMutableRawPointer?) {
+    //            if keyPath == #keyPath(WKWebView.estimatedProgress) {
+    //                updateProgress()
+    //            } else {
+    //                super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+    //            }
+    //        }
     
     // MARK: - IB Actions
     @IBAction func didTappBackButton(_ sender: Any) {
@@ -83,6 +80,16 @@ final class WebViewViewController: UIViewController {
     private func updateProgress() {
         progressView.setProgress(Float(webView.estimatedProgress), animated: true)
         progressView.isHidden = fabs(webView.estimatedProgress - 1.0) <= 0.0001
+    }
+    
+    private func progressObservation() {
+        estimatedProgressObservation = webView.observe(
+            \.estimatedProgress, options: [],
+             changeHandler: { [weak self] _, _ in
+                 guard let self = self else { return }
+                 self.updateProgress()
+             }
+        )
     }
 }
 
@@ -107,7 +114,18 @@ extension WebViewViewController: WKNavigationDelegate {
         {
             return codeItem.value
         } else {
+//            showAlertInWebView()
             return nil
         }
+    }
+    
+    private func showAlertInWebView() {
+        let alertController = UIAlertController(
+            title: "Что-то пошло не так(",
+            message: "Не удалось войти в систему",
+            preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "ОК", style: .cancel)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true)
     }
 }
