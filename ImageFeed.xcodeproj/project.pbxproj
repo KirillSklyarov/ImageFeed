@@ -135,13 +135,11 @@
 		731402B72B1E4DB800FDBD5F /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				733A93AE2B627236007105A2 /* Others */,
+				733A93AD2B62720C007105A2 /* Authentification */,
 				734433952B5DAE130081EFDB /* AlertPresenter */,
-				7330B6F32B3DBC3800D88C05 /* Constants.swift */,
-				734433822B5686FD0081EFDB /* UIBlockingProgressHUD.swift */,
 				7382D3D32B42E7C100D6CC0F /* Extensions */,
 				731402A72B1DC6C500FDBD5F /* Assets.xcassets */,
-				7314029E2B1DC6C400FDBD5F /* AppDelegate.swift */,
-				731402A02B1DC6C400FDBD5F /* SceneDelegate.swift */,
 				731402AC2B1DC6C500FDBD5F /* Info.plist */,
 			);
 			path = Services;
@@ -164,6 +162,28 @@
 			path = TabBarController;
 			sourceTree = "<group>";
 		};
+		733A93AD2B62720C007105A2 /* Authentification */ = {
+			isa = PBXGroup;
+			children = (
+				7382D3D12B42E73300D6CC0F /* OAuth2Service.swift */,
+				7382D3DC2B42EA9800D6CC0F /* OAuth2TokenStorage.swift */,
+				7344338E2B5BCC4B0081EFDB /* ProfileImageService.swift */,
+				734433842B5692750081EFDB /* ProfileService.swift */,
+			);
+			path = Authentification;
+			sourceTree = "<group>";
+		};
+		733A93AE2B627236007105A2 /* Others */ = {
+			isa = PBXGroup;
+			children = (
+				7314029E2B1DC6C400FDBD5F /* AppDelegate.swift */,
+				7330B6F32B3DBC3800D88C05 /* Constants.swift */,
+				734433822B5686FD0081EFDB /* UIBlockingProgressHUD.swift */,
+				731402A02B1DC6C400FDBD5F /* SceneDelegate.swift */,
+			);
+			path = Others;
+			sourceTree = "<group>";
+		};
 		7344338A2B5920860081EFDB /* Profile */ = {
 			isa = PBXGroup;
 			children = (
@@ -176,8 +196,6 @@
 		7344338B2B5924400081EFDB /* Authentification */ = {
 			isa = PBXGroup;
 			children = (
-				7382D3D12B42E73300D6CC0F /* OAuth2Service.swift */,
-				7382D3DC2B42EA9800D6CC0F /* OAuth2TokenStorage.swift */,
 				7382D3DA2B42EA3C00D6CC0F /* NetworkErrors.swift */,
 				7382D3D62B42E90200D6CC0F /* OAuthTokenResponseBody.swift */,
 			);
@@ -187,7 +205,6 @@
 		7344338C2B5BCBFD0081EFDB /* ProfileData */ = {
 			isa = PBXGroup;
 			children = (
-				734433842B5692750081EFDB /* ProfileService.swift */,
 				734433862B5920430081EFDB /* ProfileResult.swift */,
 				734433882B59206B0081EFDB /* Profile.swift */,
 			);
@@ -197,7 +214,6 @@
 		7344338D2B5BCC1B0081EFDB /* ProfileImage */ = {
 			isa = PBXGroup;
 			children = (
-				7344338E2B5BCC4B0081EFDB /* ProfileImageService.swift */,
 				734433902B5BCC840081EFDB /* UserResult.swift */,
 			);
 			path = ProfileImage;

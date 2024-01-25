@@ -4,14 +4,15 @@ import ProgressHUD
 
 final class SplashViewController: UIViewController {
     
+    // MARK: - Public Properties
+    weak var authViewController: AuthViewController?
+    
     // MARK: - Private properties
     private let oauth2Service = OAuth2Service.shared
     private let oauth2TokenStorage = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
-    
-    weak var authViewController: AuthViewController?
-    
+        
     private lazy var splashImage: UIImageView = {
         let image = UIImageView()
         image.image = UIImage(named: "vector")
@@ -30,17 +31,15 @@ final class SplashViewController: UIViewController {
             splashImage.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
         
-        let authKey = "auth24"
-        if !UserDefaults.standard.bool(forKey: authKey) {
-            KeychainWrapper.standard.removeObject(forKey: "bearerToken")
-            UserDefaults.standard.setValue(true, forKey: authKey)
-        }
+//        let authKey = "auth27"
+//        if !UserDefaults.standard.bool(forKey: authKey) {
+//            KeychainWrapper.standard.removeObject(forKey: "bearerToken")
+//            UserDefaults.standard.setValue(true, forKey: authKey)
+//        }
         
-        if oauth2TokenStorage.token != nil {
-            print("✅ Токен найден. Нужно только обновить данные из профиля и аватарку.")
-            self.fetchProfile(token: oauth2TokenStorage.token!)
+        if let token = oauth2TokenStorage.token {
+            fetchProfile(token: token)
         } else {
-            print("🔴 Токен не найден. Нужно пройти аутентификацию.")
             showAuthController()
         }
     }
@@ -100,7 +99,9 @@ extension SplashViewController {
             case .success (let profile):
                 self.profileImageService.fetchProfileImageURL(
                     username: profile.userName,
-                    token: oauth2TokenStorage.token!) {_ in }
+                    token: token) {_ in }
+                
+//                oauth2TokenStorage.token!
                 self.switchToTabBarController()
             case .failure:
                 UIBlockingProgressHUD.dismiss()

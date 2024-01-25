@@ -1,4 +1,3 @@
-import Foundation
 import UIKit
 
 final class OAuth2Service {
@@ -25,12 +24,6 @@ final class OAuth2Service {
     // MARK: - Public methods
     func fetchOAuthToken(_ code: String, completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
-        print("""
-        ---------------------------------------------------------
-                Раздел Аутентификации - запрашиваем токен
-        ---------------------------------------------------------
-        """)
-        
         if lastCode == code { return }
         task?.cancel()
         lastCode = code
@@ -41,11 +34,9 @@ final class OAuth2Service {
             DispatchQueue.main.async {
                 switch result {
                 case .success(let body):
-                    print("✅ Ответ на запрос пришел успешный и мы сохранили authToken")
                     self.authToken = body.accessToken
                     completion(.success(body.accessToken))
                 case .failure(let error):
-                    print("🔴 Ответ на запрос пришел c ошибкой и мы не сохранили authToken")
                     completion(.failure(error))
                     self.lastCode = nil
                 }

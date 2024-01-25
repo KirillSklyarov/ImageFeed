@@ -61,7 +61,7 @@ final class ProfileViewController: UIViewController {
         view.backgroundColor = .ypBackground
         
         profileImageServiceObserver = NotificationCenter.default.addObserver(
-            forName: ProfileImageService.DidChangeNotification,
+            forName: ProfileImageService.didChangeNotification,
             object: nil,
             queue: .main
         ) { [weak self] _ in
@@ -120,7 +120,9 @@ final class ProfileViewController: UIViewController {
     }
     
     private func updateProfileImage() {
-        guard let avatarURL = URL(string: profileImageService.avatarURL!) else { fatalError("Пришлa пустая ссылка на аватарку")}
+        guard let imageURL = profileImageService.avatarURL,
+              let avatarURL = URL(string: imageURL) else { fatalError("Пришлa пустая ссылка на аватарку")}
+        
         avatarImage.kf.setImage(with: avatarURL, placeholder: UIImage(named: "placeholder"))
     }
 }

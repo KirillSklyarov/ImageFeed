@@ -11,7 +11,6 @@ final class AuthViewController: UIViewController {
     
     // MARK: - Public Properties
     weak var delegate: AuthViewControllerDelegate?
-    
     weak var webViewController: WebViewViewController?
     
     lazy var authLogo: UIImageView = {

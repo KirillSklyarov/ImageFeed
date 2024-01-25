@@ -6,7 +6,7 @@ final class ProfileImageService {
     static let shared = ProfileImageService()
     private init() {}
     
-    static let DidChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
+    static let didChangeNotification = Notification.Name(rawValue: "ProfileImageProviderDidChange")
     
     // MARK: - Private properties
     private (set) var avatarURL: String?
@@ -17,28 +17,19 @@ final class ProfileImageService {
     // MARK: - Public methods
     func fetchProfileImageURL(username: String, token: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
-        print("""
-        ---------------------------------------------------------
-                   Раздел Аватарки - запрашиваем аватарку
-        ---------------------------------------------------------
-        """)
-        
         guard task == nil else { fatalError("Тут у нас не завершился предыдущий процесс") }
         let request = makeProfileImageRequest(userName: username, token: token)
-        print("✅ Запрос на данные аватарки успешно создан")
         let task = urlSession.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) -> Void in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 switch result {
                 case .success(let profileImageData):
-                    print("✅ Ответ на запрос по Аватарке пришел успешный и мы ее сохранили")
                     self.avatarURL = profileImageData.profileImage.small
                     completion(.success(profileImageData.profileImage.small))
-                    NotificationCenter.default.post(name: ProfileImageService.DidChangeNotification,
+                    NotificationCenter.default.post(name: ProfileImageService.didChangeNotification,
                                                     object: self,
                                                     userInfo: ["URL": self.avatarURL as Any])
                 case .failure(let error):
-                    print("🔴 Ответ на запрос Аватарки пришел c ошибкой и мы ее не сохранили")
                     completion(.failure(error))
                 }
                 self.task = nil
