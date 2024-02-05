@@ -12,6 +12,8 @@ final class SplashViewController: UIViewController {
     private let oauth2TokenStorage = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
+    
+    private let imageListService = ImageListService.shared
         
     private lazy var splashImage: UIImageView = {
         let image = UIImageView()
@@ -38,6 +40,7 @@ final class SplashViewController: UIViewController {
 //        }
         
         if let token = oauth2TokenStorage.token {
+            imageListService.fetchPhotosNextPage()
             fetchProfile(token: token)
         } else {
             showAuthController()
@@ -85,6 +88,7 @@ extension SplashViewController {
             guard let self = self else { return }
             switch result {
             case .success (let token):
+//                self.imageListService.fetchPhotosNextPage()
                 self.fetchProfile(token: token)
             case .failure:
                 authViewController?.showAlert()
@@ -100,8 +104,6 @@ extension SplashViewController {
                 self.profileImageService.fetchProfileImageURL(
                     username: profile.userName,
                     token: token) {_ in }
-                
-//                oauth2TokenStorage.token!
                 self.switchToTabBarController()
             case .failure:
                 UIBlockingProgressHUD.dismiss()
