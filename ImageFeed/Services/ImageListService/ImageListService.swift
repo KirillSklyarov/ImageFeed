@@ -27,10 +27,11 @@ final class ImageListService {
                     // print("Успешный результат: \(photoResult)")
                     let array = photoResult.map {Photo(from: $0) }
                     self.photos += array
-                    // print(self.photos)
+//                    print(self.photos)
                     NotificationCenter.default.post(
                         name: ImageListService.didChangeNotification,
-                        object: self)
+                        object: self,
+                        userInfo: ["Photos": self.photos as Any])
                 case .failure(let error):
                     print("Ошибка: \(error)")
                     // Обработка ошибки
