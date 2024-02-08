@@ -40,7 +40,7 @@ final class SplashViewController: UIViewController {
 //        }
         
         if let token = oauth2TokenStorage.token {
-            imageListService.fetchPhotosNextPage()
+//            imageListService.fetchPhotosNextPage()
             fetchProfile(token: token)
         } else {
             showAuthController()
