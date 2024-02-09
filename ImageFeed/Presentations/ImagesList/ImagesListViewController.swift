@@ -56,7 +56,7 @@ extension ImagesListViewController {
         let imageURL = photos[indexPath.row].thumbImageURL
         guard let image = URL(string: imageURL) else { fatalError("Пришлa пустая ссылка на аватарку")}
         cell.cellImage.kf.setImage(with: image, placeholder: UIImage(named: "imagePlaceholder"))
-        cell.cellDateLabel.text = dateFormatter.string(from: Date())
+        cell.cellDateLabel.text = dateFormatter.string(from: photos[indexPath.row].createdAt ?? Date())
         let isLiked = indexPath.row % 2 == 0
         //        let likeImage = isLiked ? UIImage(named: "No Active") : UIImage(named: "Active")
         //        cell.cellButton.setImage(likeImage, for: .normal)

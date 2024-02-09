@@ -18,9 +18,8 @@ struct Photo {
         self.isLiked = result.likedByUser
         
         self.createdAt = {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-            guard let date = dateFormatter.date(from: result.createdAt!) else  { fatalError("Cant convert the date") }
+            let dateFormatter = ISO8601DateFormatter()
+            guard let date = dateFormatter.date(from: result.createdAt) else  { fatalError("Can't convert the date") }
             return date
         }()
     }

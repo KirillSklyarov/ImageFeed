@@ -52,6 +52,8 @@ final class ProfileViewController: UIViewController {
         return button
     }()
     
+    var animationLayers = Set<CALayer>()
+    
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
@@ -108,7 +110,7 @@ final class ProfileViewController: UIViewController {
     
     // MARK: - Private Methods
     @objc private func buttonTapped(_ sender: UIButton) {
-        profileLogOut()
+        showAlert()
     }
     
     private func updateProfileDetails(profile: Profile?) {
@@ -157,3 +159,41 @@ extension ProfileViewController {
         window.makeKeyAndVisible()
     }
 }
+
+extension ProfileViewController {
+    private func showAlert() {
+        let alertController = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены, что хотите выйти?",
+            preferredStyle: .alert)
+        
+        let quitAction = UIAlertAction(title: "Да", style: .default, handler: { _ in self.profileLogOut()
+        })
+        let cancelAction = UIAlertAction(title: "Нет", style: .cancel)
+        
+        alertController.addAction(quitAction)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true)
+    }
+}
+
+
+//extension ProfileViewController {
+//    func setGradient() {
+//        let gradient = CAGradientLayer()
+//        gradient.frame = CGRect(origin: .zero, size: CGSize(width: 70, height: 70))
+//        gradient.locations = [0, 0.1, 0.3]
+//        gradient.colors = [
+//            UIColor(red: 0.682, green: 0.686, blue: 0.706, alpha: 1).cgColor,
+//                UIColor(red: 0.531, green: 0.533, blue: 0.553, alpha: 1).cgColor,
+//                UIColor(red: 0.431, green: 0.433, blue: 0.453, alpha: 1).cgColor
+//        ]
+//        gradient.startPoint = CGPoint(x: 0, y: 0.5)
+//        gradient.endPoint = CGPoint(x: 1, y: 0.5)
+//        gradient.cornerRadius = 35
+//        gradient.masksToBounds = true
+////        animationLayers.append
+//        avatarImage.layer.addSublayer(gradient)
+//
+//    }
+//}

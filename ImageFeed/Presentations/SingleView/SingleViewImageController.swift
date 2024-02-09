@@ -11,7 +11,7 @@ final class SingleViewImageController: UIViewController {
     @IBOutlet weak var shareButton: UIButton!
     
     // MARK: - Public Properties
-    var image: UIImage! {
+    var image: UIImage! = UIImage(named: "imagePlaceholder") {
         didSet {
             guard isViewLoaded else { return }
             imageView.image = image
@@ -20,7 +20,6 @@ final class SingleViewImageController: UIViewController {
     }
     
     var fullImageURL: URL?
-    
     
     // MARK: - IB Actions
     @IBAction func backButtonTapped(_ sender: Any) {
@@ -37,8 +36,6 @@ final class SingleViewImageController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         imageView.image = image
-        scrollView.minimumZoomScale = 0.1
-        scrollView.maximumZoomScale = 1.25
         
         if let fullImageURL = fullImageURL {
             downloadImageAndDisplayOnFullScreen()
@@ -56,6 +53,8 @@ extension SingleViewImageController: UIScrollViewDelegate {
 // MARK: - Private method
 extension SingleViewImageController {
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
+        scrollView.minimumZoomScale = 0.1
+        scrollView.maximumZoomScale = 1.25
         let minZoomScale = scrollView.minimumZoomScale
         let maxZoomScale = scrollView.maximumZoomScale
         view.layoutIfNeeded()
@@ -66,7 +65,7 @@ extension SingleViewImageController {
         let scale = min(maxZoomScale, max(minZoomScale, max(hScale, vScale)))
         scrollView.setZoomScale(scale, animated: true)
         scrollView.layoutIfNeeded()
-        let newContentSize = scrollView.contentSize
+        let newContentSize = self.scrollView.contentSize
         let x = (newContentSize.width - visibleRectSize.width) / 2
         let y = (newContentSize.height - visibleRectSize.height) / 2
         scrollView.setContentOffset(CGPoint(x: x, y: y), animated: false)
@@ -76,25 +75,27 @@ extension SingleViewImageController {
 extension SingleViewImageController {
     private func downloadImageAndDisplayOnFullScreen() {
         if let fullImageURL = fullImageURL {
-            Kingfisher.ImageDownloader.default.downloadImage(with: fullImageURL,  progressBlock: { receivedSize, totalSize in
-                let progress = Float(receivedSize) / Float(totalSize)
-                ProgressHUD.progress("The picture is loading", CGFloat(progress))
-            })  { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .success(let value):
-                    UIBlockingProgressHUD.dismiss()
-                    let image = value.image
-                    self.image = image
-                    self.rescaleAndCenterImageInScrollView(image: image)
-                case .failure(let error):
-                    print(error)
-                    self.showAlert()
+            Kingfisher.ImageDownloader.default.downloadImage(
+                with: fullImageURL,
+                progressBlock: { receivedSize, totalSize in
+                    let progress = Float(receivedSize) / Float(totalSize)
+                    ProgressHUD.progress("The picture is loading", CGFloat(progress))
+                })  { [weak self] result in
+                    guard let self = self else { return }
+                    switch result {
+                    case .success(let value):
+                        UIBlockingProgressHUD.dismiss()
+                        let image = value.image
+                        self.image = image
+                    case .failure(let error):
+                        print(error)
+                        self.showAlert()
+                    }
                 }
-            }
         }
     }
 }
+
 
 extension SingleViewImageController {
     private func showAlert() {
