@@ -37,7 +37,7 @@ final class SingleViewImageController: UIViewController {
         super.viewDidLoad()
         imageView.image = image
         
-        if let fullImageURL = fullImageURL {
+        if fullImageURL != nil {
             downloadImageAndDisplayOnFullScreen()
         }
     }
@@ -50,7 +50,7 @@ extension SingleViewImageController: UIScrollViewDelegate {
     }
 }
 
-// MARK: - Private method
+// MARK: - Private methods
 extension SingleViewImageController {
     private func rescaleAndCenterImageInScrollView(image: UIImage) {
         scrollView.minimumZoomScale = 0.1

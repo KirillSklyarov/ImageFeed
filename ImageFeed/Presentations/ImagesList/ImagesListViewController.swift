@@ -7,11 +7,10 @@ final class ImagesListViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
     
     // MARK: - Private properties
-    private let photosName: [String] = Array(0..<11).map{"\($0)"}
     private let singleViewImageSegueIdentifier = "ShowSingleImage"
     private let imageListService = ImageListService.shared
     
-    var photos: [Photo] = []
+    private var photos: [Photo] = []
     
     private var photoServiceObserver: NSObjectProtocol?
     
@@ -22,7 +21,6 @@ final class ImagesListViewController: UIViewController {
         formatter.dateFormat = "d MMMM yyyy"
         return formatter
     }()
-    
     
     // MARK: - View Life Cycles
     override func viewDidLoad() {
@@ -56,12 +54,12 @@ extension ImagesListViewController {
         let imageURL = photos[indexPath.row].thumbImageURL
         guard let image = URL(string: imageURL) else { fatalError("Пришлa пустая ссылка на аватарку")}
         cell.cellImage.kf.setImage(with: image, placeholder: UIImage(named: "imagePlaceholder"))
-        cell.cellDateLabel.text = dateFormatter.string(from: photos[indexPath.row].createdAt ?? Date())
-        let isLiked = indexPath.row % 2 == 0
-        //        let likeImage = isLiked ? UIImage(named: "No Active") : UIImage(named: "Active")
-        //        cell.cellButton.setImage(likeImage, for: .normal)
-        cell.setGradient()
         
+        cell.cellDateLabel.text = dateFormatter.string(from: photos[indexPath.row].createdAt ?? Date())
+        let likeImage = photos[indexPath.row].isLiked ? UIImage(named: "Active") : UIImage(named: "No Active")
+        cell.likeButton.setImage(likeImage, for: .normal)
+        
+        cell.setGradient()
     }
 }
 
@@ -85,9 +83,7 @@ extension ImagesListViewController: UITableViewDataSource {
 }
 
 // MARK: - UITableViewDelegate
-
 extension ImagesListViewController: UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: singleViewImageSegueIdentifier, sender: indexPath)
     }
@@ -121,7 +117,6 @@ extension ImagesListViewController {
 }
 
 extension ImagesListViewController {
-    
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row + 1 == photos.count {
             imageListService.fetchPhotosNextPage()
@@ -145,46 +140,17 @@ extension ImagesListViewController: ImageListCellDelegate {
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         let photo = photos[indexPath.row]
-        UIBlockingProgressHUD.show()
+        photo.isLiked ? UIBlockingProgressHUD.dislike() : UIBlockingProgressHUD.like()
         imageListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { result in
             switch result {
             case .success:
-                let likeImage = photo.isLiked ? UIImage(named: "No Active") : UIImage(named: "Active")
-                cell.cellButton.setImage(likeImage, for: .normal)
-            case .failure (let error):
-                print(error)
+                self.photos = self.imageListService.photos
+                let likeImage = self.photos[indexPath.row].isLiked ? UIImage(named: "Active") : UIImage(named: "No Active")
+                cell.likeButton.setImage(likeImage, for: .normal)
+                UIBlockingProgressHUD.dismiss()
+            case .failure:
+                UIBlockingProgressHUD.dismiss()
             }
-            
         }
     }
 }
-
-
-
-//extension ImagesListViewController: ImagesListCellDelegate {
-//
-//    func imageListCellDidTapLike(_ cell: ImagesListCell) {
-//
-//      guard let indexPath = tableView.indexPath(for: cell) else { return }
-//      let photo = photos[indexPath.row]
-//      // Покажем лоадер
-//     UIBlockingProgressHUD.show()
-//     imagesListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { result in
-//        switch result {
-//        case .success:
-//           // Синхронизируем массив картинок с сервисом
-//           self.photos = self.imagesListService.photos
-//           // Изменим индикацию лайка картинки
-//           сell.setIsLiked(self.photos[indexPath.row].isLiked)
-//           // Уберём лоадер
-//           UIBlockingProgressHUD.dismiss()
-//        case .failure:
-//           // Уберём лоадер
-//           UIBlockingProgressHUD.dismiss()
-//           // Покажем, что что-то пошло не так
-//           // TODO: Показать ошибку с использованием UIAlertController
-//           }
-//        }
-//    }
-//
-//}

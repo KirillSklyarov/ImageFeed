@@ -16,11 +16,21 @@ struct Photo {
         self.thumbImageURL = result.urls.thumb
         self.largeImageURL = result.urls.full
         self.isLiked = result.likedByUser
-        
+    
         self.createdAt = {
             let dateFormatter = ISO8601DateFormatter()
             guard let date = dateFormatter.date(from: result.createdAt) else  { fatalError("Can't convert the date") }
             return date
         }()
+    }
+    
+    init(id: String, size: CGSize, createdAt: Date, welcomeDescription: String?, thumbImageURL: String, largeImageURL: String, isLiked: Bool) {
+        self.id = id
+        self.size = size
+        self.createdAt = createdAt
+        self.welcomeDescription = welcomeDescription
+        self.isLiked = isLiked
+        self.largeImageURL = largeImageURL
+        self.thumbImageURL = thumbImageURL
     }
 }
