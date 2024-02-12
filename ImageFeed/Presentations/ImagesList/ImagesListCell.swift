@@ -1,17 +1,33 @@
 import UIKit
+import Kingfisher
+
+protocol ImageListCellDelegate: AnyObject {
+    func imageListCellDidTapLike(_ cell: ImagesListCell)
+}
 
 final class ImagesListCell: UITableViewCell {
     
     // MARK: - IB Outlets
     @IBOutlet weak var cellImage: UIImageView!
-    @IBOutlet weak var cellButton: UIButton!
     @IBOutlet weak var cellDateLabel: UILabel!
     @IBOutlet weak var gradientView: UIView!
+    @IBOutlet weak var likeButton: UIButton!
     
     // MARK: - Public Properties
     static let reuseIdentifier = "ImagesListCell"
+    weak var delegate: ImageListCellDelegate?
+    
+    // MARK: - Override Methods
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        cellImage.kf.cancelDownloadTask()
+    }
+    
+    // MARK: - IB Actions
+    @IBAction private func likeButtonClicked() {
+        delegate?.imageListCellDidTapLike(self)
+    }
 }
-
 
 // MARK: - Public Methods
 extension ImagesListCell {

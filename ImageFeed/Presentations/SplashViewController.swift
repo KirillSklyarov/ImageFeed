@@ -12,7 +12,9 @@ final class SplashViewController: UIViewController {
     private let oauth2TokenStorage = OAuth2TokenStorage()
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
-        
+    
+    private let imageListService = ImageListService.shared
+    
     private lazy var splashImage: UIImageView = {
         let image = UIImageView()
         image.image = UIImage(named: "vector")
@@ -31,12 +33,12 @@ final class SplashViewController: UIViewController {
             splashImage.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
         
-//        let authKey = "auth27"
-//        if !UserDefaults.standard.bool(forKey: authKey) {
-//            KeychainWrapper.standard.removeObject(forKey: "bearerToken")
-//            UserDefaults.standard.setValue(true, forKey: authKey)
-//        }
-        
+                let authKey = "auth07"
+                if !UserDefaults.standard.bool(forKey: authKey) {
+                    KeychainWrapper.standard.removeObject(forKey: "bearerToken")
+                    UserDefaults.standard.setValue(true, forKey: authKey)
+                }
+                
         if let token = oauth2TokenStorage.token {
             fetchProfile(token: token)
         } else {
@@ -52,7 +54,8 @@ extension SplashViewController {
         let vc = storyboard.instantiateViewController(withIdentifier: "AuthViewController")
         
         guard let vc = vc as? AuthViewController else {
-            fatalError("Не могу создать AuthViewController")
+            print("Не могу создать AuthViewController")
+            return
         }
         authViewController = vc
         vc.delegate = self
@@ -79,7 +82,6 @@ extension SplashViewController {
         window.makeKeyAndVisible()
     }
     
-    // В этом методе мы только делаем переход в зависиомости от результата обработки запроса
     private func fetchOAuthToken(_ code: String) {
         oauth2Service.fetchOAuthToken(code) { [weak self] result in
             guard let self = self else { return }
@@ -100,8 +102,6 @@ extension SplashViewController {
                 self.profileImageService.fetchProfileImageURL(
                     username: profile.userName,
                     token: token) {_ in }
-                
-//                oauth2TokenStorage.token!
                 self.switchToTabBarController()
             case .failure:
                 UIBlockingProgressHUD.dismiss()

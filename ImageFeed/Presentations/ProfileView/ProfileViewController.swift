@@ -1,5 +1,7 @@
 import UIKit
 import Kingfisher
+import WebKit
+import SwiftKeychainWrapper
 
 final class ProfileViewController: UIViewController {
     
@@ -49,6 +51,8 @@ final class ProfileViewController: UIViewController {
         button.tintColor = .ypRed
         return button
     }()
+    
+    var animationLayers = Set<CALayer>()
     
     private let profileService = ProfileService.shared
     private let profileImageService = ProfileImageService.shared
@@ -106,9 +110,7 @@ final class ProfileViewController: UIViewController {
     
     // MARK: - Private Methods
     @objc private func buttonTapped(_ sender: UIButton) {
-        nameLabel.removeFromSuperview()
-        nicknameLabel.removeFromSuperview()
-        textLabel.removeFromSuperview()
+        showAlert()
     }
     
     private func updateProfileDetails(profile: Profile?) {
@@ -121,8 +123,59 @@ final class ProfileViewController: UIViewController {
     
     private func updateProfileImage() {
         guard let imageURL = profileImageService.avatarURL,
-              let avatarURL = URL(string: imageURL) else { fatalError("Пришлa пустая ссылка на аватарку")}
+              let avatarURL = URL(string: imageURL) else {
+            print("Пришлa пустая ссылка на аватарку")
+            return
+        }
         
         avatarImage.kf.setImage(with: avatarURL, placeholder: UIImage(named: "placeholder"))
+    }
+}
+
+extension ProfileViewController {
+    private func profileLogOut() {
+        KeychainWrapper.standard.removeObject(forKey: "bearerToken")
+        clearViewElements()
+        cleanCookies()
+        switchToSplashViewController()
+    }
+    
+    private func clearViewElements() {
+        nameLabel.removeFromSuperview()
+        nicknameLabel.removeFromSuperview()
+        textLabel.removeFromSuperview()
+        avatarImage.removeFromSuperview()
+    }
+    
+    private func cleanCookies() {
+        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
+        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+            records.forEach { record in
+                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
+            }
+        }
+    }
+    
+    private func switchToSplashViewController() {
+        guard let window = UIApplication.shared.windows.first else { fatalError("Can't present SplashViewController") }
+        window.rootViewController = SplashViewController()
+        window.makeKeyAndVisible()
+    }
+}
+
+extension ProfileViewController {
+    private func showAlert() {
+        let alertController = UIAlertController(
+            title: "Пока, пока!",
+            message: "Уверены, что хотите выйти?",
+            preferredStyle: .alert)
+        
+        let quitAction = UIAlertAction(title: "Да", style: .default, handler: { _ in self.profileLogOut()
+        })
+        let cancelAction = UIAlertAction(title: "Нет", style: .cancel)
+        
+        alertController.addAction(quitAction)
+        alertController.addAction(cancelAction)
+        present(alertController, animated: true)
     }
 }

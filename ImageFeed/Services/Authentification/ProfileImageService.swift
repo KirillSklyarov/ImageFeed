@@ -17,7 +17,7 @@ final class ProfileImageService {
     // MARK: - Public methods
     func fetchProfileImageURL(username: String, token: String, _ completion: @escaping (Result<String, Error>) -> Void) {
         assert(Thread.isMainThread)
-        guard task == nil else { fatalError("Тут у нас не завершился предыдущий процесс") }
+        guard task == nil else { return }
         let request = makeProfileImageRequest(userName: username, token: token)
         let task = urlSession.objectTask(for: request) { [weak self] (result: Result<UserResult, Error>) -> Void in
             guard let self = self else { return }

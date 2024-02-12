@@ -38,7 +38,7 @@
                                                         <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                                     </userDefinedRuntimeAttributes>
                                                 </imageView>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FiI-9P-O0v" userLabel="Cell Button">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FiI-9P-O0v" userLabel="Like Button">
                                                     <rect key="frame" x="333" y="4" width="44" height="44"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="44" id="KJM-88-QYO"/>
@@ -48,6 +48,9 @@
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                     <state key="normal" image="No Active"/>
                                                     <buttonConfiguration key="configuration" style="plain" image="No Active"/>
+                                                    <connections>
+                                                        <action selector="likeButtonClicked" destination="QvC-Pn-9O5" eventType="touchUpInside" id="JQ9-pf-HNF"/>
+                                                    </connections>
                                                 </button>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="04 декабря 2023" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hTY-Wf-jiv" userLabel="Date Label">
                                                     <rect key="frame" x="23.999999999999993" y="166.33333333333334" width="107.33333333333331" height="15.666666666666657"/>
@@ -80,10 +83,10 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                         <connections>
-                                            <outlet property="cellButton" destination="FiI-9P-O0v" id="ELu-EI-4JQ"/>
                                             <outlet property="cellDateLabel" destination="hTY-Wf-jiv" id="zjU-vN-Q0u"/>
                                             <outlet property="cellImage" destination="15P-ei-mLM" id="22L-MJ-cv2"/>
                                             <outlet property="gradientView" destination="dpc-P5-RX2" id="kIN-iv-Nfl"/>
+                                            <outlet property="likeButton" destination="FiI-9P-O0v" id="jVx-IO-EQS"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -125,7 +128,7 @@
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="972-mK-IVU">
                                 <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                 <subviews>
-                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="0" translatesAutoresizingMaskIntoConstraints="NO" id="oH4-hU-244">
+                                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="imagePlaceholder" translatesAutoresizingMaskIntoConstraints="NO" id="oH4-hU-244">
                                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                                     </imageView>
                                 </subviews>
@@ -364,6 +367,7 @@
         <image name="Sharing" width="50" height="50"/>
         <image name="chevron.backward" width="9" height="16"/>
         <image name="chevron.black" width="9" height="16"/>
+        <image name="imagePlaceholder" width="83" height="75"/>
         <image name="person.crop-active" width="20" height="22"/>
         <namedColor name="YP Background">
             <color red="0.10196078431372549" green="0.10588235294117647" blue="0.13333333333333333" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

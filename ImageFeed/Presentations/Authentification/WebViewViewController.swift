@@ -50,27 +50,6 @@ final class WebViewViewController: UIViewController {
         updateProgress()
     }
     
-    //    func startActivity() {
-    //    }
-    
-    //    override func viewDidDisappear(_ animated: Bool) {
-    //        super.viewDidDisappear(animated)
-    ////        webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), context: nil)
-    //    }
-    
-    // MARK: - Overrides Methods
-    //    override func observeValue(
-    //        forKeyPath keyPath: String?,
-    //        of object: Any?,
-    //        change: [NSKeyValueChangeKey : Any]?,
-    //        context: UnsafeMutableRawPointer?) {
-    //            if keyPath == #keyPath(WKWebView.estimatedProgress) {
-    //                updateProgress()
-    //            } else {
-    //                super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
-    //            }
-    //        }
-    
     // MARK: - IB Actions
     @IBAction func didTappBackButton(_ sender: Any) {
         delegate?.webViewViewControllerDidCancel(self)
