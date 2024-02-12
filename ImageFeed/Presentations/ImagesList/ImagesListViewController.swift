@@ -62,11 +62,12 @@ extension ImagesListViewController {
         }
         cell.cellImage.kf.setImage(with: image, placeholder: UIImage(named: "imagePlaceholder"))
         
-        guard let createdDate = photos[indexPath.row].createdAt else {
-            return cell.cellDateLabel.text = ""
+        if let createdDate = photos[indexPath.row].createdAt {
+            cell.cellDateLabel.text = dateFormatter.string(from: createdDate)
+        } else {
+            cell.cellDateLabel.text = ""
         }
-        cell.cellDateLabel.text = dateFormatter.string(from: createdDate)
-                
+        
         let likeImage = photos[indexPath.row].isLiked ? UIImage(named: "Active") : UIImage(named: "No Active")
         cell.likeButton.setImage(likeImage, for: .normal)
         
