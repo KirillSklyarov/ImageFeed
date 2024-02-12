@@ -63,10 +63,14 @@ extension OAuth2Service {
         )
     }
     
-    private func makeRequest(code: String) -> URLRequest {
-        guard let url = URL(string: "...\(code)") else { fatalError("Failed to create URL") }
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        return request
+    private func makeRequest(code: String) -> URLRequest? {
+        if let url = URL(string: "...\(code)") {
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            return request
+        } else {
+            print("Failed to create URL")
+            return nil
+        }
     }
 }

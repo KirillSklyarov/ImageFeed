@@ -15,17 +15,17 @@ final class ImageListService {
     private let token = OAuth2TokenStorage().token
     
     // MARK: - Public Methods
-    func fetchPhotosNextPage() {
+    func fetchPhotosNextPage(token: String) {
         assert(Thread.isMainThread)
-        guard task == nil else { fatalError("Тут у нас не завершился предыдущий процесс") }
-        let request = makePhotosRequest()
+        guard task == nil else { return }
+        let request = makePhotosRequest(token: token)
         let task = URLSession.shared.arrayObjectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) -> Void in
             guard let self = self else { return }
             DispatchQueue.main.async { [self] in
                 switch result {
                 case .success(let photoResult):
                     // Обработка успешного результата
-                    print("Успешный результат: \(photoResult)")
+                    //                    print("Вот токен: \(OAuth2TokenStorage().token ?? "ooops") Результат загрузки фоток успешный")
                     let array = photoResult.map {Photo(from: $0) }
                     self.photos += array
                     //                    print(self.photos)
@@ -46,7 +46,7 @@ final class ImageListService {
     
     func changeLike(photoId: String, isLike: Bool, _ completion: @escaping (Result<Void, Error>) -> Void) {
         assert(Thread.isMainThread)
-        guard task == nil else { fatalError("Тут у нас не завершился предыдущий процесс") }
+        guard task == nil else { return }
         let request = makeLikeRequest(photoId: photoId, isLike: isLike)
         let task = URLSession.shared.photoForLikeObjectTask(for: request) { [weak self] (result: Result<PhotoForLike, Error>) -> Void in
             guard let self = self else { return }
@@ -84,14 +84,14 @@ final class ImageListService {
     }
     
     // MARK: - Private Methods
-    private func makePhotosRequest() -> URLRequest {
+    private func makePhotosRequest(token: String) -> URLRequest {
         let pageNumber = photos.count / 10 + 1
         var request = URLRequest.makeHTTPRequest(
             path: "/photos/"
             + "?client_id=\(Constants.accessKey)"
             + "&page=\(pageNumber)",
             httpMethod: "GET")
-        request.setValue("Bearer \(token!)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         return request
     }
     
@@ -102,7 +102,9 @@ final class ImageListService {
             + "\(photoId)"
             + "/like",
             httpMethod: "\(method)")
-        request.setValue("Bearer \(token!)", forHTTPHeaderField: "Authorization")
+        if let token = token { request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        } else { print("Token not found for makeLikeRequest") }
+        //       request.setValue("Bearer \(token!)", forHTTPHeaderField: "Authorization")
         return request
     }
 }

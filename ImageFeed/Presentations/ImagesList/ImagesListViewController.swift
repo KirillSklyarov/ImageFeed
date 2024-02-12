@@ -29,7 +29,11 @@ final class ImagesListViewController: UIViewController {
         
         if photos.isEmpty {
             UIBlockingProgressHUD.show()
-            imageListService.fetchPhotosNextPage()
+            guard let token = OAuth2TokenStorage().token else { 
+                print("Токен не получен. Будут проблемы")
+                return
+            }
+            imageListService.fetchPhotosNextPage(token: token)
             UIBlockingProgressHUD.dismiss()
         }
         
@@ -52,10 +56,17 @@ extension ImagesListViewController {
         cell.delegate = self
         
         let imageURL = photos[indexPath.row].thumbImageURL
-        guard let image = URL(string: imageURL) else { fatalError("Пришлa пустая ссылка на аватарку")}
+        guard let image = URL(string: imageURL) else {
+            print("Пришлa пустая ссылка на аватарку")
+            return
+        }
         cell.cellImage.kf.setImage(with: image, placeholder: UIImage(named: "imagePlaceholder"))
         
-        cell.cellDateLabel.text = dateFormatter.string(from: photos[indexPath.row].createdAt ?? Date())
+        guard let createdDate = photos[indexPath.row].createdAt else {
+            return cell.cellDateLabel.text = ""
+        }
+        cell.cellDateLabel.text = dateFormatter.string(from: createdDate)
+                
         let likeImage = photos[indexPath.row].isLiked ? UIImage(named: "Active") : UIImage(named: "No Active")
         cell.likeButton.setImage(likeImage, for: .normal)
         
@@ -119,7 +130,7 @@ extension ImagesListViewController {
 extension ImagesListViewController {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row + 1 == photos.count {
-            imageListService.fetchPhotosNextPage()
+            imageListService.fetchPhotosNextPage(token: OAuth2TokenStorage().token!)
         }
     }
     

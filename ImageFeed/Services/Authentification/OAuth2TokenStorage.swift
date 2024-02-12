@@ -11,7 +11,10 @@ final class OAuth2TokenStorage {
         set {
             if let newValue = newValue {
             keyWrapper.set(newValue, forKey: key)
-            } else { fatalError("Уппсс, проблемы с ключом")}
+            } else {
+                print("Уппсс, проблемы с ключом")
+                return
+            }
         }
     }
     

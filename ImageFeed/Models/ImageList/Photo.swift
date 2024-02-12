@@ -8,6 +8,8 @@ struct Photo {
     let thumbImageURL: String
     let largeImageURL: String
     var isLiked: Bool
+        
+    static let dateFormatter = ISO8601DateFormatter()
     
     init(from result: PhotoResult) {
         self.id = result.id
@@ -18,8 +20,7 @@ struct Photo {
         self.isLiked = result.likedByUser
     
         self.createdAt = {
-            let dateFormatter = ISO8601DateFormatter()
-            guard let date = dateFormatter.date(from: result.createdAt) else  { fatalError("Can't convert the date") }
+            guard let date = Photo.dateFormatter.date(from: result.createdAt) else  { return nil }
             return date
         }()
     }

@@ -33,11 +33,11 @@ final class SplashViewController: UIViewController {
             splashImage.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
         
-        //        let authKey = "auth27"
-        //        if !UserDefaults.standard.bool(forKey: authKey) {
-        //            KeychainWrapper.standard.removeObject(forKey: "bearerToken")
-        //            UserDefaults.standard.setValue(true, forKey: authKey)
-        //        }
+                let authKey = "auth07"
+                if !UserDefaults.standard.bool(forKey: authKey) {
+                    KeychainWrapper.standard.removeObject(forKey: "bearerToken")
+                    UserDefaults.standard.setValue(true, forKey: authKey)
+                }
                 
         if let token = oauth2TokenStorage.token {
             fetchProfile(token: token)
@@ -54,7 +54,8 @@ extension SplashViewController {
         let vc = storyboard.instantiateViewController(withIdentifier: "AuthViewController")
         
         guard let vc = vc as? AuthViewController else {
-            fatalError("Не могу создать AuthViewController")
+            print("Не могу создать AuthViewController")
+            return
         }
         authViewController = vc
         vc.delegate = self
