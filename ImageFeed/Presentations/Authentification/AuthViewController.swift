@@ -72,8 +72,13 @@ extension AuthViewController {
         if segue.identifier == showWebViewSegueIdentifier {
             guard let webViewViewController = segue.destination as? WebViewViewController
             else { fatalError("Failed to prepare for \(showWebViewSegueIdentifier)") }
-            webViewController = webViewViewController
+            let webViewPresenter = WebViewPresenter()
+            webViewViewController.presenter = webViewPresenter
+            webViewPresenter.view = webViewViewController
             webViewViewController.delegate = self
+            
+//            webViewController.p = webViewViewController
+//            webViewViewController.delegate = self
         } else {
             super.prepare(for: segue, sender: sender)
         }
