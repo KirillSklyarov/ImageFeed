@@ -3,12 +3,19 @@ import Kingfisher
 import WebKit
 import SwiftKeychainWrapper
 
+//protocol ProfileViewControllerProtocol {
+//    var presenter: ProfileViewPresenterProtocol? { get set }
+//}
+
 final class ProfileViewController: UIViewController {
+      
+    // MARK: - Public properties
+    var presenter: ProfileViewPresenter?
     
     // MARK: - Private properties
     private lazy var avatarImageSize = 70.0
     
-    private lazy var avatarImage: UIImageView = {
+    internal lazy var avatarImage: UIImageView = {
         let image = UIImageView()
         image.image = UIImage(named: "Photo")
         image.tintColor = .gray
@@ -17,7 +24,7 @@ final class ProfileViewController: UIViewController {
         return image
     }()
     
-    private lazy var nameLabel: UILabel = {
+    internal lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.text = "Екатерина Новикова"
         label.textColor = .ypWhite
@@ -25,7 +32,7 @@ final class ProfileViewController: UIViewController {
         return label
     }()
     
-    private lazy var nicknameLabel: UILabel = {
+    internal lazy var nicknameLabel: UILabel = {
         let label = UILabel()
         label.text = "@ekaterina_nov"
         label.textColor = .ypGray
@@ -51,30 +58,42 @@ final class ProfileViewController: UIViewController {
         button.tintColor = .ypRed
         return button
     }()
-    
-    var animationLayers = Set<CALayer>()
-    
+        
     private let profileService = ProfileService.shared
-    private let profileImageService = ProfileImageService.shared
     private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - View Life Cycles
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .ypBackground
+        presenter = ProfileViewPresenter()
+        presenter?.viewController = self
         
+        addObserver()
+        uiElementsSetup()
+        presenter?.updateProfileDetails(profile: profileService.profile)
+        presenter?.updateProfileImage()
+    }
+    
+    // MARK: - Private Methods
+    @objc private func buttonTapped(_ sender: UIButton) {
+        presenter?.showAlert()
+    }
+    
+    private func addObserver() {
         profileImageServiceObserver = NotificationCenter.default.addObserver(
             forName: ProfileImageService.didChangeNotification,
             object: nil,
             queue: .main
         ) { [weak self] _ in
             guard let self = self else { return }
-            self.updateProfileImage()
+            presenter?.updateProfileImage()
         }
-        
-        updateProfileDetails(profile: profileService.profile)
-        updateProfileImage()
+    }
+    
+    private func uiElementsSetup() {
+        view.backgroundColor = .ypBackground
         
         view.addSubview(avatarImage)
         view.addSubview(nameLabel)
@@ -108,74 +127,4 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
-    // MARK: - Private Methods
-    @objc private func buttonTapped(_ sender: UIButton) {
-        showAlert()
-    }
-    
-    private func updateProfileDetails(profile: Profile?) {
-        guard let profile = profile else {
-            print("Не смогли получить данные профиля")
-            return }
-        nameLabel.text = profile.name
-        nicknameLabel.text = profile.loginName
-    }
-    
-    private func updateProfileImage() {
-        guard let imageURL = profileImageService.avatarURL,
-              let avatarURL = URL(string: imageURL) else {
-            print("Пришлa пустая ссылка на аватарку")
-            return
-        }
-        
-        avatarImage.kf.setImage(with: avatarURL, placeholder: UIImage(named: "placeholder"))
-    }
-}
-
-extension ProfileViewController {
-    private func profileLogOut() {
-        KeychainWrapper.standard.removeObject(forKey: "bearerToken")
-        clearViewElements()
-        cleanCookies()
-        switchToSplashViewController()
-    }
-    
-    private func clearViewElements() {
-        nameLabel.removeFromSuperview()
-        nicknameLabel.removeFromSuperview()
-        textLabel.removeFromSuperview()
-        avatarImage.removeFromSuperview()
-    }
-    
-    private func cleanCookies() {
-        HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
-        WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
-            records.forEach { record in
-                WKWebsiteDataStore.default().removeData(ofTypes: record.dataTypes, for: [record], completionHandler: {})
-            }
-        }
-    }
-    
-    private func switchToSplashViewController() {
-        guard let window = UIApplication.shared.windows.first else { fatalError("Can't present SplashViewController") }
-        window.rootViewController = SplashViewController()
-        window.makeKeyAndVisible()
-    }
-}
-
-extension ProfileViewController {
-    private func showAlert() {
-        let alertController = UIAlertController(
-            title: "Пока, пока!",
-            message: "Уверены, что хотите выйти?",
-            preferredStyle: .alert)
-        
-        let quitAction = UIAlertAction(title: "Да", style: .default, handler: { _ in self.profileLogOut()
-        })
-        let cancelAction = UIAlertAction(title: "Нет", style: .cancel)
-        
-        alertController.addAction(quitAction)
-        alertController.addAction(cancelAction)
-        present(alertController, animated: true)
-    }
 }

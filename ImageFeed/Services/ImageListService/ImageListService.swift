@@ -88,7 +88,7 @@ final class ImageListService {
         let pageNumber = photos.count / 10 + 1
         var request = URLRequest.makeHTTPRequest(
             path: "/photos/"
-            + "?client_id=\(Constants.accessKey)"
+            + "?client_id=\(AuthConfiguration.standart.accessKey)"
             + "&page=\(pageNumber)",
             httpMethod: "GET")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
