@@ -2,30 +2,22 @@ import UIKit
 import Kingfisher
 
 protocol ImagesListViewControllerProtocol: AnyObject {
-    
     var presenter: ImageListViewPresenterProtocol? { get set }
+    var tableView: UITableView! { get set }
     
-    func updateTableViewAnimated()
 }
 
 final class ImagesListViewController: UIViewController, ImagesListViewControllerProtocol {
     
+    
     // MARK: - IB Outlets
-    @IBOutlet private weak var tableView: UITableView!
+    @IBOutlet internal weak var tableView: UITableView!
     
     var presenter: ImageListViewPresenterProtocol?
     
     // MARK: - Private properties
     private let singleViewImageSegueIdentifier = "ShowSingleImage"
     private let imageListService = ImageListService.shared
-    
-    private lazy var dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .long
-        formatter.timeStyle = .none
-        formatter.dateFormat = "d MMMM yyyy"
-        return formatter
-    }()
     
     // MARK: - View Life Cycles
     override func viewDidLoad() {
@@ -46,20 +38,12 @@ extension ImagesListViewController {
         
         cell.delegate = self
         
-        guard  let imageURL = presenter?.photos[indexPath.row].thumbImageURL,
-               let image = URL(string: imageURL) else {
-            print("Пришлa пустая ссылка на аватарку")
-            return
-        }
+        let image = presenter?.avatarUrl(indexPath: indexPath)
         cell.cellImage.kf.setImage(with: image, placeholder: UIImage(named: "imagePlaceholder"))
         
-        if let createdDate = presenter?.photos[indexPath.row].createdAt {
-            cell.cellDateLabel.text = dateFormatter.string(from: createdDate)
-        } else {
-            cell.cellDateLabel.text = ""
-        }
+        cell.cellDateLabel.text = presenter?.dateLabel(indexPath: indexPath)
         
-        let likeImage = presenter?.photos[indexPath.row].isLiked == true ? UIImage(named: "Active") : UIImage(named: "No Active")
+        let likeImage = presenter?.likeImage(indexPath: indexPath)
         cell.likeButton.setImage(likeImage, for: .normal)
         
         cell.setGradient()
@@ -96,7 +80,7 @@ extension ImagesListViewController {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let result = presenter?.letsCountHeight(tableView, heightForRowAt: indexPath) else {
             return 0.0 }
-            return result
+        return result
     }
 }
 
@@ -117,36 +101,11 @@ extension ImagesListViewController {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         presenter?.loadingNextPage(indexPath: indexPath)
     }
-    
-    func updateTableViewAnimated() {
-        tableView.performBatchUpdates {
-            guard let oldCount = presenter?.photos.count else { return }
-            let newCount = imageListService.photos.count
-            presenter?.photos = imageListService.photos
-            if oldCount != newCount {
-                let indexPaths = (oldCount..<newCount).map { IndexPath(row: $0, section: 0) }
-                tableView.insertRows(at: indexPaths, with: .automatic)
-            }
-        } completion: { _ in }
-    }
 }
 
 extension ImagesListViewController: ImageListCellDelegate {
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
-        guard let indexPath = tableView.indexPath(for: cell),
-              let photo = presenter?.photos[indexPath.row] else { return }
-        photo.isLiked ? UIBlockingProgressHUD.dislike() : UIBlockingProgressHUD.like()
-        imageListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { result in
-            switch result {
-            case .success:
-                self.presenter?.photos = self.imageListService.photos
-                let likeImage = ((self.presenter?.photos[indexPath.row].isLiked) != nil) ? UIImage(named: "Active") : UIImage(named: "No Active")
-                cell.likeButton.setImage(likeImage, for: .normal)
-                UIBlockingProgressHUD.dismiss()
-            case .failure:
-                UIBlockingProgressHUD.dismiss()
-            }
-        }
+        presenter?.didTapLike(cell: cell)
     }
 }
 
