@@ -21,10 +21,11 @@ protocol ProfileViewPresenterProtocol {
 
 final class ProfileViewPresenter: ProfileViewPresenterProtocol {
     
+    // MARK: - Public properties
     weak var viewController: ProfileViewControllerProtocol?
     
+    // MARK: - Public Methods
     func showAlert() -> UIAlertController {
-        
         let alertController = UIAlertController(
             title: "Пока, пока!",
             message: "Уверены, что хотите выйти?",
@@ -39,12 +40,35 @@ final class ProfileViewPresenter: ProfileViewPresenterProtocol {
         return alertController
     }
     
+    func addObserver() {
+        NotificationCenter.default.addObserver(
+            forName: ProfileImageService.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            _ = updateProfileImage()
+        }
+    }
+    
+    func updateProfileImage() -> URL? {
+        if let imageURL = ProfileImageService.shared.avatarURL,
+           let avatarURL = URL(string: imageURL) {
+            return avatarURL
+        } else {
+            print("Пришлa пустая ссылка на аватарку")
+            return nil
+        }
+    }
+    
     func profileLogOut() {
         KeychainWrapper.standard.removeObject(forKey: "bearerToken")
         cleanCookies()
         switchToSplashViewController()
     }
     
+    
+    // MARK: - Private Methods
     private func cleanCookies() {
         HTTPCookieStorage.shared.removeCookies(since: Date.distantPast)
         WKWebsiteDataStore.default().fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
@@ -59,28 +83,4 @@ final class ProfileViewPresenter: ProfileViewPresenterProtocol {
         window.rootViewController = SplashViewController()
         window.makeKeyAndVisible()
     }
-    
-    func addObserver() {
-        /// let profileImageServiceObserver: NSObjectProtocol? =
-         NotificationCenter.default.addObserver(
-            forName: ProfileImageService.didChangeNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            guard let self = self else { return }
-            _ = updateProfileImage()
-        }
-    }
-    
-    
-    func updateProfileImage() -> URL? {
-        if let imageURL = ProfileImageService.shared.avatarURL,
-           let avatarURL = URL(string: imageURL) {
-            return avatarURL
-        } else {
-            print("Пришлa пустая ссылка на аватарку")
-            return nil
-        }
-    }
-    
 }

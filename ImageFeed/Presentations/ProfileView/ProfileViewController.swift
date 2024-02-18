@@ -63,7 +63,6 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     private let profileService = ProfileService.shared
     
     // MARK: - View Life Cycles
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -131,7 +130,8 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         ])
     }
     
-    private func configure(presenter: ProfileViewPresenterProtocol?) {
+    // MARK: - Public Methods
+    func configure(presenter: ProfileViewPresenterProtocol?) {
         self.presenter = presenter
         self.presenter?.viewController = self
     }
