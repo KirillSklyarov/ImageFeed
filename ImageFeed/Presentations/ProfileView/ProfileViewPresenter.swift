@@ -10,15 +10,20 @@ import UIKit
 import SwiftKeychainWrapper
 import WebKit
 
-//protocol ProfileViewPresenterProtocol {
-//    func showAlert()
-//}
+protocol ProfileViewPresenterProtocol {
+    func showAlert() -> UIAlertController
+    func profileLogOut()
+    func updateProfileImage() -> URL?
+    func addObserver()
+    
+    var viewController: ProfileViewControllerProtocol? { get set }
+}
 
-final class ProfileViewPresenter {
+final class ProfileViewPresenter: ProfileViewPresenterProtocol {
     
-    weak var viewController: ProfileViewController?
+    weak var viewController: ProfileViewControllerProtocol?
     
-    func showAlert() {
+    func showAlert() -> UIAlertController {
         
         let alertController = UIAlertController(
             title: "Пока, пока!",
@@ -31,9 +36,8 @@ final class ProfileViewPresenter {
         
         alertController.addAction(quitAction)
         alertController.addAction(cancelAction)
-        viewController?.present(alertController, animated: true)
+        return alertController
     }
-    
     
     func profileLogOut() {
         KeychainWrapper.standard.removeObject(forKey: "bearerToken")
@@ -56,21 +60,27 @@ final class ProfileViewPresenter {
         window.makeKeyAndVisible()
     }
     
-    func updateProfileDetails(profile: Profile?) {
-        guard let profile = profile else {
-            print("Не смогли получить данные профиля")
-            return }
-        viewController?.nameLabel.text = profile.name
-        viewController?.nicknameLabel.text = profile.loginName
+    func addObserver() {
+        /// let profileImageServiceObserver: NSObjectProtocol? =
+         NotificationCenter.default.addObserver(
+            forName: ProfileImageService.didChangeNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            guard let self = self else { return }
+            _ = updateProfileImage()
+        }
     }
     
-    func updateProfileImage() {
-        guard let imageURL = ProfileImageService.shared.avatarURL,
-              let avatarURL = URL(string: imageURL) else {
+    
+    func updateProfileImage() -> URL? {
+        if let imageURL = ProfileImageService.shared.avatarURL,
+           let avatarURL = URL(string: imageURL) {
+            return avatarURL
+        } else {
             print("Пришлa пустая ссылка на аватарку")
-            return
+            return nil
         }
-        
-        viewController?.avatarImage.kf.setImage(with: avatarURL, placeholder: UIImage(named: "placeholder"))
     }
+    
 }

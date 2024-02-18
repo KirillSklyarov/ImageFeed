@@ -3,14 +3,15 @@ import Kingfisher
 import WebKit
 import SwiftKeychainWrapper
 
-//protocol ProfileViewControllerProtocol {
-//    var presenter: ProfileViewPresenterProtocol? { get set }
-//}
+protocol ProfileViewControllerProtocol: AnyObject {
+    func updateAvatar()
+    var presenter: ProfileViewPresenterProtocol? { get set }
+}
 
-final class ProfileViewController: UIViewController {
-      
+final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
+    
     // MARK: - Public properties
-    var presenter: ProfileViewPresenter?
+    var presenter: ProfileViewPresenterProtocol?
     
     // MARK: - Private properties
     private lazy var avatarImageSize = 70.0
@@ -58,38 +59,41 @@ final class ProfileViewController: UIViewController {
         button.tintColor = .ypRed
         return button
     }()
-        
+    
     private let profileService = ProfileService.shared
-    private var profileImageServiceObserver: NSObjectProtocol?
     
     // MARK: - View Life Cycles
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        presenter = ProfileViewPresenter()
-        presenter?.viewController = self
+        configure(presenter: ProfileViewPresenter())
         
-        addObserver()
+        presenter?.addObserver()
         uiElementsSetup()
-        presenter?.updateProfileDetails(profile: profileService.profile)
-        presenter?.updateProfileImage()
+        updateProfileDetails(profile: profileService.profile)
+        updateAvatar()
+    }
+    
+    // MARK: - IB Actions
+    @objc private func buttonTapped(_ sender: UIButton) {
+        let alert = presenter?.showAlert()
+        self.present(alert!, animated: true)
     }
     
     // MARK: - Private Methods
-    @objc private func buttonTapped(_ sender: UIButton) {
-        presenter?.showAlert()
+    private func updateProfileDetails(profile: Profile?) {
+        if let profile = profile {
+            nameLabel.text = profile.name
+            nicknameLabel.text = profile.loginName
+        } else {
+            print("Не смогли получить данные профиля")
+            return }
     }
     
-    private func addObserver() {
-        profileImageServiceObserver = NotificationCenter.default.addObserver(
-            forName: ProfileImageService.didChangeNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            guard let self = self else { return }
-            presenter?.updateProfileImage()
-        }
+    internal func updateAvatar() {
+        let avatar = presenter?.updateProfileImage()
+        self.avatarImage.kf.setImage(with: avatar, placeholder: UIImage(named: "placeholder"))
     }
     
     private func uiElementsSetup() {
@@ -127,4 +131,8 @@ final class ProfileViewController: UIViewController {
         ])
     }
     
+    private func configure(presenter: ProfileViewPresenterProtocol?) {
+        self.presenter = presenter
+        self.presenter?.viewController = self
+    }
 }
