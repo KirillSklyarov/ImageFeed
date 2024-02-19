@@ -66,6 +66,12 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        exitButton.accessibilityIdentifier = "logoutButton"
+        nameLabel.accessibilityIdentifier = "Name Label"
+        nicknameLabel.accessibilityIdentifier = "NickName Label"
+        textLabel.accessibilityIdentifier = "Text Label"
+        
+        self.view.accessibilityIdentifier = "ProfileViewController"
         configure(presenter: ProfileViewPresenter())
         
         presenter?.addObserver()

@@ -4,7 +4,6 @@ import Kingfisher
 protocol ImagesListViewControllerProtocol: AnyObject {
     var presenter: ImageListViewPresenterProtocol? { get set }
     var tableView: UITableView! { get set }
-    
 }
 
 final class ImagesListViewController: UIViewController, ImagesListViewControllerProtocol {
@@ -22,6 +21,8 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
     // MARK: - View Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+//        tableView.accessibilityIdentifier = "ImagesListView"
         
         configure(presenter: ImageListViewPresenter())
         

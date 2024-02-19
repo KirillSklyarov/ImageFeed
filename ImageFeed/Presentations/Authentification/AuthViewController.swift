@@ -27,6 +27,9 @@ final class AuthViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .ypBackground
         view.addSubview(authLogo)
+        
+        view.accessibilityIdentifier = "AuthViewController"
+        uiButton.accessibilityIdentifier = "Autentificate"
         authLogo.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
