@@ -8,9 +8,9 @@
 import Foundation
 import UIKit
 
-protocol ImageListViewPresenterProtocol {
+public protocol ImageListViewPresenterProtocol {
     
-    var viewController: ImagesListViewControllerProtocol? { get set }
+    var viewController: ImageListViewControllerProtocol? { get set }
     var photos: [Photo] { get set }
     
     func addObserver()
@@ -26,9 +26,9 @@ protocol ImageListViewPresenterProtocol {
 
 final class ImageListViewPresenter: ImageListViewPresenterProtocol {
     
-    weak var viewController: ImagesListViewControllerProtocol?
+    weak var viewController: ImageListViewControllerProtocol?
     
-    internal var photos: [Photo] = []
+    var photos: [Photo] = []
     private let imageListService = ImageListService.shared
     
     private lazy var dateFormatter: DateFormatter = {
@@ -42,11 +42,13 @@ final class ImageListViewPresenter: ImageListViewPresenterProtocol {
     func loadingPhotos() {
         if photos.isEmpty {
             UIBlockingProgressHUD.show()
-            guard let token = OAuth2TokenStorage().token else {
+            guard OAuth2TokenStorage().token != nil else {
                 print("Токен не получен. Будут проблемы")
                 return
             }
-            imageListService.fetchPhotosNextPage(token: token)
+            imageListService.fetchPhotosNextPage()
+
+//            imageListService.fetchPhotosNextPage(token: token)
             UIBlockingProgressHUD.dismiss()
         }
     }
@@ -133,7 +135,8 @@ final class ImageListViewPresenter: ImageListViewPresenterProtocol {
     
     func loadingNextPage(indexPath: IndexPath) {
         if indexPath.row + 1 == photos.count {
-            imageListService.fetchPhotosNextPage(token: OAuth2TokenStorage().token!)
+            imageListService.fetchPhotosNextPage()
+//            imageListService.fetchPhotosNextPage(token: OAuth2TokenStorage().token!)
         }
     }
 }

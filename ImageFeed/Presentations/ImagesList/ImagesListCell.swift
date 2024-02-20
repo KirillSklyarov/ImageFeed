@@ -5,7 +5,7 @@ protocol ImageListCellDelegate: AnyObject {
     func imageListCellDidTapLike(_ cell: ImagesListCell)
 }
 
-final class ImagesListCell: UITableViewCell {
+public final class ImagesListCell: UITableViewCell {
     
     // MARK: - IB Outlets
     @IBOutlet weak var cellImage: UIImageView!
@@ -18,7 +18,7 @@ final class ImagesListCell: UITableViewCell {
     weak var delegate: ImageListCellDelegate?
     
     // MARK: - Override Methods
-    override func prepareForReuse() {
+    public override func prepareForReuse() {
         super.prepareForReuse()
         
 //        likeButton.accessibilityIdentifier = "likeButton"

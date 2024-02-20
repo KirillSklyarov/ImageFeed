@@ -15,10 +15,11 @@ final class ImageListService {
     private let token = OAuth2TokenStorage().token
     
     // MARK: - Public Methods
-    func fetchPhotosNextPage(token: String) {
+//    func fetchPhotosNextPage(token: String) {
+    func fetchPhotosNextPage() {
         assert(Thread.isMainThread)
         guard task == nil else { return }
-        let request = makePhotosRequest(token: token)
+        let request = makePhotosRequest(token: OAuth2TokenStorage().token!)
         let task = URLSession.shared.arrayObjectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) -> Void in
             guard let self = self else { return }
             DispatchQueue.main.async { [self] in
@@ -28,7 +29,6 @@ final class ImageListService {
                     //                    print("Вот токен: \(OAuth2TokenStorage().token ?? "ooops") Результат загрузки фоток успешный")
                     let array = photoResult.map {Photo(from: $0) }
                     self.photos += array
-                    //                    print(self.photos)
                     NotificationCenter.default.post(
                         name: ImageListService.didChangeNotification,
                         object: self,

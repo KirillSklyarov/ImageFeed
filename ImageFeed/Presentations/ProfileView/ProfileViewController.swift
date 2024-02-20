@@ -67,7 +67,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        configure(presenter: ProfileViewPresenter())
+        configure(presenter: ProfileViewPresenter())
         
         presenter?.addObserver()
         uiElementsSetup()

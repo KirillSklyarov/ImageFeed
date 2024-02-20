@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		7314029F2B1DC6C400FDBD5F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7314029E2B1DC6C400FDBD5F /* AppDelegate.swift */; };
 		731402A12B1DC6C400FDBD5F /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731402A02B1DC6C400FDBD5F /* SceneDelegate.swift */; };
-		731402A32B1DC6C400FDBD5F /* ImagesListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731402A22B1DC6C400FDBD5F /* ImagesListViewController.swift */; };
+		731402A32B1DC6C400FDBD5F /* ImageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 731402A22B1DC6C400FDBD5F /* ImageListViewController.swift */; };
 		731402A62B1DC6C400FDBD5F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 731402A42B1DC6C400FDBD5F /* Main.storyboard */; };
 		731402A82B1DC6C500FDBD5F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 731402A72B1DC6C500FDBD5F /* Assets.xcassets */; };
 		731402AB2B1DC6C500FDBD5F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 731402A92B1DC6C500FDBD5F /* LaunchScreen.storyboard */; };
@@ -28,6 +28,8 @@
 		732A28BA2B83ADEA0052DEFD /* ProfileViewPresenterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732A28B92B83ADEA0052DEFD /* ProfileViewPresenterSpy.swift */; };
 		732A28BC2B83AFF50052DEFD /* ProfileViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732A28BB2B83AFF50052DEFD /* ProfileViewTests.swift */; };
 		732A28BF2B83B7440052DEFD /* ProfileViewControllerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732A28BE2B83B7440052DEFD /* ProfileViewControllerSpy.swift */; };
+		732A28C42B8499590052DEFD /* ImageListPresenterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732A28C32B8499590052DEFD /* ImageListPresenterSpy.swift */; };
+		732A28C62B849E5D0052DEFD /* ImageListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732A28C52B849E5D0052DEFD /* ImageListTests.swift */; };
 		7330B6F42B3DBC3900D88C05 /* AuthConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330B6F32B3DBC3800D88C05 /* AuthConfiguration.swift */; };
 		7330B6F82B3DC56600D88C05 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330B6F72B3DC56600D88C05 /* AuthViewController.swift */; };
 		7330B6FA2B3DDBC600D88C05 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330B6F92B3DDBC600D88C05 /* WebViewViewController.swift */; };
@@ -85,7 +87,7 @@
 		7314029B2B1DC6C400FDBD5F /* ImageFeed.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ImageFeed.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7314029E2B1DC6C400FDBD5F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		731402A02B1DC6C400FDBD5F /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		731402A22B1DC6C400FDBD5F /* ImagesListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagesListViewController.swift; sourceTree = "<group>"; };
+		731402A22B1DC6C400FDBD5F /* ImageListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageListViewController.swift; sourceTree = "<group>"; };
 		731402A52B1DC6C400FDBD5F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		731402A72B1DC6C500FDBD5F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		731402AA2B1DC6C500FDBD5F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -108,6 +110,8 @@
 		732A28B92B83ADEA0052DEFD /* ProfileViewPresenterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewPresenterSpy.swift; sourceTree = "<group>"; };
 		732A28BB2B83AFF50052DEFD /* ProfileViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewTests.swift; sourceTree = "<group>"; };
 		732A28BE2B83B7440052DEFD /* ProfileViewControllerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewControllerSpy.swift; sourceTree = "<group>"; };
+		732A28C32B8499590052DEFD /* ImageListPresenterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageListPresenterSpy.swift; sourceTree = "<group>"; };
+		732A28C52B849E5D0052DEFD /* ImageListTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageListTests.swift; sourceTree = "<group>"; };
 		7330B6F32B3DBC3800D88C05 /* AuthConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthConfiguration.swift; sourceTree = "<group>"; };
 		7330B6F72B3DC56600D88C05 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		7330B6F92B3DDBC600D88C05 /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
@@ -205,7 +209,7 @@
 		731402B42B1DDA6400FDBD5F /* ImagesList */ = {
 			isa = PBXGroup;
 			children = (
-				731402A22B1DC6C400FDBD5F /* ImagesListViewController.swift */,
+				731402A22B1DC6C400FDBD5F /* ImageListViewController.swift */,
 				732A28A52B8263880052DEFD /* ImageListViewPresenter.swift */,
 				731402B22B1DD47100FDBD5F /* ImagesListCell.swift */,
 			);
@@ -244,10 +248,10 @@
 		732A28972B7F750B0052DEFD /* ImageFeedTests_sprint_13 */ = {
 			isa = PBXGroup;
 			children = (
-				732A28BD2B83B0100052DEFD /* ProfileViewTests */,
 				732A28982B7F750B0052DEFD /* ImageFeedTests_sprint_13.swift */,
-				732A289F2B7F767E0052DEFD /* WebViewPresenterSpy.swift */,
-				732A28A12B7F7C140052DEFD /* WebviewViewControllerSpy.swift */,
+				732A28C02B8498090052DEFD /* ImageListTests */,
+				732A28BD2B83B0100052DEFD /* ProfileViewTests */,
+				732A28C22B8498210052DEFD /* WebViewTests */,
 			);
 			path = ImageFeedTests_sprint_13;
 			sourceTree = "<group>";
@@ -277,6 +281,24 @@
 				732A28BB2B83AFF50052DEFD /* ProfileViewTests.swift */,
 			);
 			path = ProfileViewTests;
+			sourceTree = "<group>";
+		};
+		732A28C02B8498090052DEFD /* ImageListTests */ = {
+			isa = PBXGroup;
+			children = (
+				732A28C32B8499590052DEFD /* ImageListPresenterSpy.swift */,
+				732A28C52B849E5D0052DEFD /* ImageListTests.swift */,
+			);
+			path = ImageListTests;
+			sourceTree = "<group>";
+		};
+		732A28C22B8498210052DEFD /* WebViewTests */ = {
+			isa = PBXGroup;
+			children = (
+				732A289F2B7F767E0052DEFD /* WebViewPresenterSpy.swift */,
+				732A28A12B7F7C140052DEFD /* WebviewViewControllerSpy.swift */,
+			);
+			path = WebViewTests;
 			sourceTree = "<group>";
 		};
 		7330B6F62B3DC54100D88C05 /* Authentification */ = {
@@ -614,7 +636,7 @@
 			files = (
 				736E79412B32F83500DFC9B5 /* SingleViewImageController.swift in Sources */,
 				734433892B59206B0081EFDB /* Profile.swift in Sources */,
-				731402A32B1DC6C400FDBD5F /* ImagesListViewController.swift in Sources */,
+				731402A32B1DC6C400FDBD5F /* ImageListViewController.swift in Sources */,
 				734433872B5920430081EFDB /* ProfileResult.swift in Sources */,
 				7382D3D92B42E9FC00D6CC0F /* URLSession+Data.swift in Sources */,
 				7382D3DB2B42EA3C00D6CC0F /* NetworkErrors.swift in Sources */,
@@ -660,6 +682,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				732A28C42B8499590052DEFD /* ImageListPresenterSpy.swift in Sources */,
+				732A28C62B849E5D0052DEFD /* ImageListTests.swift in Sources */,
 				732A28BC2B83AFF50052DEFD /* ProfileViewTests.swift in Sources */,
 				732A28BA2B83ADEA0052DEFD /* ProfileViewPresenterSpy.swift in Sources */,
 				732A28A22B7F7C140052DEFD /* WebviewViewControllerSpy.swift in Sources */,

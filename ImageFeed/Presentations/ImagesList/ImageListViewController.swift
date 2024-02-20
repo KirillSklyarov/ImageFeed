@@ -1,13 +1,12 @@
 import UIKit
 import Kingfisher
 
-protocol ImagesListViewControllerProtocol: AnyObject {
+public protocol ImageListViewControllerProtocol: AnyObject {
     var presenter: ImageListViewPresenterProtocol? { get set }
     var tableView: UITableView! { get set }
 }
 
-final class ImagesListViewController: UIViewController, ImagesListViewControllerProtocol {
-    
+final class ImageListViewController: UIViewController, ImageListViewControllerProtocol {
     
     // MARK: - IB Outlets
     @IBOutlet internal weak var tableView: UITableView!
@@ -21,21 +20,19 @@ final class ImagesListViewController: UIViewController, ImagesListViewController
     // MARK: - View Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        tableView.accessibilityIdentifier = "ImagesListView"
-        
+                
         configure(presenter: ImageListViewPresenter())
         
         tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
         
-        presenter?.loadingPhotos()
         presenter?.addObserver()
+        presenter?.loadingPhotos()
     }
 }
 
 // MARK: - Private Methods
-extension ImagesListViewController {
-    private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
+extension ImageListViewController {
+    func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         
         cell.delegate = self
         
@@ -52,7 +49,7 @@ extension ImagesListViewController {
 }
 
 // MARK: - UITableViewDataSource
-extension ImagesListViewController: UITableViewDataSource {
+extension ImageListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return presenter?.photos.count ?? 0
@@ -71,13 +68,13 @@ extension ImagesListViewController: UITableViewDataSource {
 }
 
 // MARK: - UITableViewDelegate
-extension ImagesListViewController: UITableViewDelegate {
+extension ImageListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: singleViewImageSegueIdentifier, sender: indexPath)
     }
 }
 
-extension ImagesListViewController {
+extension ImageListViewController {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let result = presenter?.letsCountHeight(tableView, heightForRowAt: indexPath) else {
             return 0.0 }
@@ -85,7 +82,7 @@ extension ImagesListViewController {
     }
 }
 
-extension ImagesListViewController {
+extension ImageListViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == singleViewImageSegueIdentifier {
             let vc = segue.destination as! SingleViewImageController
@@ -98,20 +95,19 @@ extension ImagesListViewController {
     }
 }
 
-extension ImagesListViewController {
+extension ImageListViewController {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         presenter?.loadingNextPage(indexPath: indexPath)
     }
 }
 
-extension ImagesListViewController: ImageListCellDelegate {
+extension ImageListViewController: ImageListCellDelegate {
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
         presenter?.didTapLike(cell: cell)
     }
 }
 
-extension ImagesListViewController {
-    
+extension ImageListViewController {
     func configure(presenter: ImageListViewPresenterProtocol?) {
         self.presenter = presenter
         self.presenter?.viewController = self
