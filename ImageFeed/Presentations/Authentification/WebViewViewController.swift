@@ -92,16 +92,6 @@ extension WebViewViewController: WKNavigationDelegate {
         }
         return nil
     }
-    
-    private func showAlertInWebView() {
-        let alertController = UIAlertController(
-            title: "Что-то пошло не так(",
-            message: "Не удалось войти в систему",
-            preferredStyle: .alert)
-        let cancelAction = UIAlertAction(title: "ОК", style: .cancel)
-        alertController.addAction(cancelAction)
-        present(alertController, animated: true)
-    }
 }
 
 extension WebViewViewController: WebViewControllerProtocol {

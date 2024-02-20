@@ -3,8 +3,9 @@ import Kingfisher
 import WebKit
 import SwiftKeychainWrapper
 
-protocol ProfileViewControllerProtocol: AnyObject {
+public protocol ProfileViewControllerProtocol: AnyObject {
     func updateAvatar()
+    func updateProfileDetails(profile: Profile?)
     var presenter: ProfileViewPresenterProtocol? { get set }
 }
 
@@ -25,7 +26,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         return image
     }()
     
-    internal lazy var nameLabel: UILabel = {
+    lazy var nameLabel: UILabel = {
         let label = UILabel()
         label.text = "Екатерина Новикова"
         label.textColor = .ypWhite
@@ -55,7 +56,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
         
         let button = UIButton.systemButton(with: buttonImage,
                                            target: self,
-                                           action: #selector(buttonTapped(_ :)))
+                                           action: #selector(buttonTapped))
         button.tintColor = .ypRed
         return button
     }()
@@ -66,28 +67,23 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        exitButton.accessibilityIdentifier = "logoutButton"
-        nameLabel.accessibilityIdentifier = "Name Label"
-        nicknameLabel.accessibilityIdentifier = "NickName Label"
-        textLabel.accessibilityIdentifier = "Text Label"
-        
-        self.view.accessibilityIdentifier = "ProfileViewController"
-        configure(presenter: ProfileViewPresenter())
+//        configure(presenter: ProfileViewPresenter())
         
         presenter?.addObserver()
         uiElementsSetup()
+        identificationForUITests()
         updateProfileDetails(profile: profileService.profile)
         updateAvatar()
     }
     
     // MARK: - IB Actions
-    @objc private func buttonTapped(_ sender: UIButton) {
+    @objc func buttonTapped() {
         let alert = presenter?.showAlert()
         self.present(alert!, animated: true)
     }
     
     // MARK: - Private Methods
-    private func updateProfileDetails(profile: Profile?) {
+    func updateProfileDetails(profile: Profile?) {
         if let profile = profile {
             nameLabel.text = profile.name
             nicknameLabel.text = profile.loginName
@@ -99,6 +95,14 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     internal func updateAvatar() {
         let avatar = presenter?.updateProfileImage()
         self.avatarImage.kf.setImage(with: avatar, placeholder: UIImage(named: "placeholder"))
+    }
+    
+    private func identificationForUITests() {
+        exitButton.accessibilityIdentifier = "logoutButton"
+        nameLabel.accessibilityIdentifier = "Name Label"
+        nicknameLabel.accessibilityIdentifier = "NickName Label"
+        textLabel.accessibilityIdentifier = "Text Label"
+        self.view.accessibilityIdentifier = "ProfileViewController"
     }
     
     private func uiElementsSetup() {

@@ -10,7 +10,7 @@ import UIKit
 import SwiftKeychainWrapper
 import WebKit
 
-protocol ProfileViewPresenterProtocol {
+public protocol ProfileViewPresenterProtocol {
     func showAlert() -> UIAlertController
     func profileLogOut()
     func updateProfileImage() -> URL?

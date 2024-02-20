@@ -80,9 +80,6 @@ extension AuthViewController {
             webViewViewController.presenter = webViewPresenter
             webViewPresenter.view = webViewViewController
             webViewViewController.delegate = self
-            
-//            webViewController.p = webViewViewController
-//            webViewViewController.delegate = self
         } else {
             super.prepare(for: segue, sender: sender)
         }

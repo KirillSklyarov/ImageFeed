@@ -25,6 +25,9 @@
 		732A28AE2B8343FD0052DEFD /* ImageFeedUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732A28AD2B8343FD0052DEFD /* ImageFeedUITests.swift */; };
 		732A28B02B8343FD0052DEFD /* ImageFeedUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732A28AF2B8343FD0052DEFD /* ImageFeedUITestsLaunchTests.swift */; };
 		732A28B72B835AAA0052DEFD /* main-2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732A28B62B835AAA0052DEFD /* main-2.swift */; };
+		732A28BA2B83ADEA0052DEFD /* ProfileViewPresenterSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732A28B92B83ADEA0052DEFD /* ProfileViewPresenterSpy.swift */; };
+		732A28BC2B83AFF50052DEFD /* ProfileViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732A28BB2B83AFF50052DEFD /* ProfileViewTests.swift */; };
+		732A28BF2B83B7440052DEFD /* ProfileViewControllerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 732A28BE2B83B7440052DEFD /* ProfileViewControllerSpy.swift */; };
 		7330B6F42B3DBC3900D88C05 /* AuthConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330B6F32B3DBC3800D88C05 /* AuthConfiguration.swift */; };
 		7330B6F82B3DC56600D88C05 /* AuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330B6F72B3DC56600D88C05 /* AuthViewController.swift */; };
 		7330B6FA2B3DDBC600D88C05 /* WebViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7330B6F92B3DDBC600D88C05 /* WebViewViewController.swift */; };
@@ -102,6 +105,9 @@
 		732A28AD2B8343FD0052DEFD /* ImageFeedUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFeedUITests.swift; sourceTree = "<group>"; };
 		732A28AF2B8343FD0052DEFD /* ImageFeedUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageFeedUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		732A28B62B835AAA0052DEFD /* main-2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "main-2.swift"; sourceTree = "<group>"; };
+		732A28B92B83ADEA0052DEFD /* ProfileViewPresenterSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewPresenterSpy.swift; sourceTree = "<group>"; };
+		732A28BB2B83AFF50052DEFD /* ProfileViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewTests.swift; sourceTree = "<group>"; };
+		732A28BE2B83B7440052DEFD /* ProfileViewControllerSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewControllerSpy.swift; sourceTree = "<group>"; };
 		7330B6F32B3DBC3800D88C05 /* AuthConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthConfiguration.swift; sourceTree = "<group>"; };
 		7330B6F72B3DC56600D88C05 /* AuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthViewController.swift; sourceTree = "<group>"; };
 		7330B6F92B3DDBC600D88C05 /* WebViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewViewController.swift; sourceTree = "<group>"; };
@@ -218,13 +224,11 @@
 		731402B72B1E4DB800FDBD5F /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				734433952B5DAE130081EFDB /* AlertPresenter */,
+				733A93AD2B62720C007105A2 /* Authentification */,
+				7382D3D32B42E7C100D6CC0F /* Extensions */,
 				73F043BF2B70C4860069B184 /* ImageListService */,
 				733A93AE2B627236007105A2 /* Others */,
-				733A93AD2B62720C007105A2 /* Authentification */,
-				734433952B5DAE130081EFDB /* AlertPresenter */,
-				7382D3D32B42E7C100D6CC0F /* Extensions */,
-				731402A72B1DC6C500FDBD5F /* Assets.xcassets */,
-				731402AC2B1DC6C500FDBD5F /* Info.plist */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -240,6 +244,7 @@
 		732A28972B7F750B0052DEFD /* ImageFeedTests_sprint_13 */ = {
 			isa = PBXGroup;
 			children = (
+				732A28BD2B83B0100052DEFD /* ProfileViewTests */,
 				732A28982B7F750B0052DEFD /* ImageFeedTests_sprint_13.swift */,
 				732A289F2B7F767E0052DEFD /* WebViewPresenterSpy.swift */,
 				732A28A12B7F7C140052DEFD /* WebviewViewControllerSpy.swift */,
@@ -254,6 +259,24 @@
 				732A28AF2B8343FD0052DEFD /* ImageFeedUITestsLaunchTests.swift */,
 			);
 			path = ImageFeedUITests;
+			sourceTree = "<group>";
+		};
+		732A28B82B839F490052DEFD /* SplashViewController */ = {
+			isa = PBXGroup;
+			children = (
+				7382D3DE2B432DA100D6CC0F /* SplashViewController.swift */,
+			);
+			path = SplashViewController;
+			sourceTree = "<group>";
+		};
+		732A28BD2B83B0100052DEFD /* ProfileViewTests */ = {
+			isa = PBXGroup;
+			children = (
+				732A28B92B83ADEA0052DEFD /* ProfileViewPresenterSpy.swift */,
+				732A28BE2B83B7440052DEFD /* ProfileViewControllerSpy.swift */,
+				732A28BB2B83AFF50052DEFD /* ProfileViewTests.swift */,
+			);
+			path = ProfileViewTests;
 			sourceTree = "<group>";
 		};
 		7330B6F62B3DC54100D88C05 /* Authentification */ = {
@@ -289,6 +312,8 @@
 		733A93AE2B627236007105A2 /* Others */ = {
 			isa = PBXGroup;
 			children = (
+				731402A72B1DC6C500FDBD5F /* Assets.xcassets */,
+				731402AC2B1DC6C500FDBD5F /* Info.plist */,
 				7314029E2B1DC6C400FDBD5F /* AppDelegate.swift */,
 				7330B6F32B3DBC3800D88C05 /* AuthConfiguration.swift */,
 				734433822B5686FD0081EFDB /* UIBlockingProgressHUD.swift */,
@@ -371,12 +396,12 @@
 		7382D3CE2B42E3AB00D6CC0F /* Presentations */ = {
 			isa = PBXGroup;
 			children = (
-				733A93A92B5E99E0007105A2 /* TabBarController */,
-				736E793F2B32F80900DFC9B5 /* SingleView */,
+				7330B6F62B3DC54100D88C05 /* Authentification */,
 				731402B42B1DDA6400FDBD5F /* ImagesList */,
 				736E793B2B32E2B300DFC9B5 /* ProfileView */,
-				7330B6F62B3DC54100D88C05 /* Authentification */,
-				7382D3DE2B432DA100D6CC0F /* SplashViewController.swift */,
+				736E793F2B32F80900DFC9B5 /* SingleView */,
+				732A28B82B839F490052DEFD /* SplashViewController */,
+				733A93A92B5E99E0007105A2 /* TabBarController */,
 			);
 			path = Presentations;
 			sourceTree = "<group>";
@@ -384,8 +409,8 @@
 		7382D3CF2B42E5BE00D6CC0F /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				73F043C02B70C5550069B184 /* ImageList */,
 				7344338B2B5924400081EFDB /* Authentification */,
+				73F043C02B70C5550069B184 /* ImageList */,
 				7344338A2B5920860081EFDB /* Profile */,
 			);
 			path = Models;
@@ -635,9 +660,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				732A28BC2B83AFF50052DEFD /* ProfileViewTests.swift in Sources */,
+				732A28BA2B83ADEA0052DEFD /* ProfileViewPresenterSpy.swift in Sources */,
 				732A28A22B7F7C140052DEFD /* WebviewViewControllerSpy.swift in Sources */,
 				732A28992B7F750B0052DEFD /* ImageFeedTests_sprint_13.swift in Sources */,
 				732A28A02B7F767E0052DEFD /* WebViewPresenterSpy.swift in Sources */,
+				732A28BF2B83B7440052DEFD /* ProfileViewControllerSpy.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -818,7 +846,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7W278NP9KT;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ImageFeed/Services/Info.plist;
+				INFOPLIST_FILE = ImageFeed/Services/Others/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -850,7 +878,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 7W278NP9KT;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = ImageFeed/Services/Info.plist;
+				INFOPLIST_FILE = ImageFeed/Services/Others/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
