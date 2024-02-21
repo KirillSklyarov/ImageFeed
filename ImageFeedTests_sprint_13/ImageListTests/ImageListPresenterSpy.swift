@@ -49,13 +49,12 @@ final class ImageListPresenterSpy: ImageListViewPresenterProtocol {
         }
     }
     
-    
     func dateLabel(indexPath: IndexPath) -> String? {
         dateIsLoading = true
         if let createdDate = photos[indexPath.row].createdAt {
             return dateFormatter.string(from: createdDate)
         } else {
-           return ""
+            return ""
         }
     }
     
@@ -73,15 +72,22 @@ final class ImageListPresenterSpy: ImageListViewPresenterProtocol {
         didTapLikeButton = true
     }
     
-//    let imageListService = ImageListService.shared
     
     func loadingNextPage(indexPath: IndexPath) {
         nextPageIsLoading = true
-//        ImageListService.shared.fetchPhotosNextPage()
     }
     
     func letsCountHeight(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         heightIsCounting = true
         return 0.0
+    }
+    
+    func didTapLike(cell: ImageFeed.ImagesListCell, indexPath: IndexPath) {
+        
+    }
+    
+    
+    func updateListModel() -> [IndexPath]? {
+        return nil
     }
 }

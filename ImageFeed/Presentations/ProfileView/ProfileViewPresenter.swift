@@ -79,7 +79,10 @@ final class ProfileViewPresenter: ProfileViewPresenterProtocol {
     }
     
     private func switchToSplashViewController() {
-        guard let window = UIApplication.shared.windows.first else { fatalError("Can't present SplashViewController") }
+        guard let window = UIApplication.shared.windows.first else {
+            assertionFailure("Can't present SplashViewController")
+            return
+        }
         window.rootViewController = SplashViewController()
         window.makeKeyAndVisible()
     }

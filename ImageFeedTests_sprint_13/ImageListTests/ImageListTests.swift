@@ -18,8 +18,8 @@ final class ImageListTests: XCTestCase {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let viewController = storyboard.instantiateViewController(withIdentifier: "ImageListViewController") as! ImageListViewController
         let presenter = ImageListPresenterSpy()
-        viewController.presenter = presenter
-        presenter.viewController = viewController
+        
+        viewController.configure(presenter: presenter)
         
         //when
         _ = viewController.view
@@ -28,37 +28,4 @@ final class ImageListTests: XCTestCase {
         XCTAssertTrue(presenter.observerIsLoading)
         XCTAssertTrue(presenter.photosAreLoading)
     }
-    
-    
-//    func testPhotoData() {
-//        // given
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let viewController = storyboard.instantiateViewController(withIdentifier: "ImageListViewController") as! ImageListViewController
-//        let presenter = ImageListPresenterSpy()
-//        viewController.presenter = presenter
-//        presenter.viewController = viewController
-//        
-//        let myPhoto = Photo(id: "firstPhoto",
-//                            size: CGSize(width: 400, height: 400),
-//                            createdAt: Date(),
-//                            welcomeDescription: nil,
-//                            thumbImageURL: "123",
-//                            largeImageURL: "123",
-//                            isLiked: false)
-//        presenter.photos.append(myPhoto)
-//        
-//        _ = viewController.view
-//        
-//        viewController.tableView.reloadData()
-//        sleep(1)
-//        
-//        let indexPath = IndexPath(row: 0, section: 0)
-//        let cell = viewController.tableView.cellForRow(at: indexPath) as! ImagesListCell
-//        
-//        let dateFormatter = ISO8601DateFormatter()
-//        let currentDate = Date()
-//        let dateString = dateFormatter.string(from: currentDate)
-//        
-//        XCTAssertEqual(cell.cellDateLabel.text, dateString)
-//    }
 }

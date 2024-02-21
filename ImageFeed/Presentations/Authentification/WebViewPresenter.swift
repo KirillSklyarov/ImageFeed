@@ -25,8 +25,9 @@ final class WebViewPresenter: WebViewPresenterProtocol {
     }
     
     func viewDidLoad() {
-        let request = authHelper.authRequest()
-        view?.load(request: request)
+        if let request = authHelper.authRequest() {
+            view?.load(request: request)
+        }
         didUpdateProgressValue(0)
     }
     
@@ -46,13 +47,4 @@ final class WebViewPresenter: WebViewPresenterProtocol {
         authHelper.code(from: url)
     }
     
-    //    private func showAlertInWebView() {
-    //        let alertController = UIAlertController(
-    //            title: "Что-то пошло не так(",
-    //            message: "Не удалось войти в систему",
-    //            preferredStyle: .alert)
-    //        let cancelAction = UIAlertAction(title: "ОК", style: .cancel)
-    //        alertController.addAction(cancelAction)
-    //        present(alertController, animated: true)
-    //    }
 }

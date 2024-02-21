@@ -66,9 +66,7 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     // MARK: - View Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        configure(presenter: ProfileViewPresenter())
-        
+                
         presenter?.addObserver()
         uiElementsSetup()
         identificationForUITests()
@@ -78,8 +76,9 @@ final class ProfileViewController: UIViewController, ProfileViewControllerProtoc
     
     // MARK: - IB Actions
     @objc func buttonTapped() {
-        let alert = presenter?.showAlert()
-        self.present(alert!, animated: true)
+        if let alert = presenter?.showAlert() {
+            self.present(alert, animated: true)
+        }
     }
     
     // MARK: - Private Methods

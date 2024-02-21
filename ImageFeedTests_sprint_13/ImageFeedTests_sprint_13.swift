@@ -76,7 +76,7 @@ final class WebViewTests: XCTestCase {
         
         //when
         let url = authHelper.authURL()
-        let urlString = url.absoluteString
+        let urlString = url!.absoluteString
         
         //then
         XCTAssertTrue(urlString.contains(configuration.authURLString))

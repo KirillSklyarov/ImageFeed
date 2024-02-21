@@ -23,12 +23,15 @@ final class UIBlockingProgressHUD {
         ProgressHUD.progress("We're disliking", 1.0)
     }
     
-    
-//    let progress = Float(receivedSize) / Float(totalSize)
-//                    ProgressHUD.showProgress(progress)
-    
     static func dismiss() {
         window?.isUserInteractionEnabled = true
         ProgressHUD.dismiss()
     }
+}
+
+public enum ProgressStatus {
+    case show
+    case dismiss
+    case like
+    case dislike
 }

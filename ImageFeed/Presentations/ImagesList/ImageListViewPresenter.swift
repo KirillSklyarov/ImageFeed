@@ -19,10 +19,10 @@ public protocol ImageListViewPresenterProtocol {
     func loadingNextPage(indexPath: IndexPath)
     func avatarUrl(indexPath: IndexPath) -> URL?
     func dateLabel(indexPath: IndexPath) -> String?
-    func likeImage(indexPath: IndexPath) -> UIImage? 
-    func didTapLike(cell: ImagesListCell)
+    func likeImage(indexPath: IndexPath) -> UIImage?
+    func didTapLike(cell: ImagesListCell, indexPath: IndexPath)
+    func updateListModel() -> [IndexPath]?
 }
-
 
 final class ImageListViewPresenter: ImageListViewPresenterProtocol {
     
@@ -38,20 +38,30 @@ final class ImageListViewPresenter: ImageListViewPresenterProtocol {
         formatter.dateFormat = "d MMMM yyyy"
         return formatter
     }()
-
+    
+    func updateListModel() -> [IndexPath]? {
+        let oldCount = photos.count
+        let newCount = imageListService.photos.count
+        photos = imageListService.photos
+        if oldCount != newCount {
+            let newIndexPaths = (oldCount..<newCount).map { IndexPath(row: $0, section: 0) }
+            return newIndexPaths
+        }
+        return nil
+    }
+    
     func loadingPhotos() {
         if photos.isEmpty {
-            UIBlockingProgressHUD.show()
+            viewController?.setIsLoading(.show)
             guard OAuth2TokenStorage().token != nil else {
                 print("Токен не получен. Будут проблемы")
                 return
             }
             imageListService.fetchPhotosNextPage()
-
-//            imageListService.fetchPhotosNextPage(token: token)
-            UIBlockingProgressHUD.dismiss()
+            viewController?.setIsLoading(.dismiss)
         }
     }
+    
     
     func addObserver() {
         NotificationCenter.default.addObserver(
@@ -60,39 +70,28 @@ final class ImageListViewPresenter: ImageListViewPresenterProtocol {
             queue: .main,
             using: { [weak self] _ in
                 guard let self = self else { return }
-                self.updateTableViewAnimated()
+                viewController?.updateTableViewAnimated()
             })
     }
     
-    func didTapLike(cell: ImagesListCell) {
-        guard let indexPath = viewController?.tableView.indexPath(for: cell) else { return }
+    func didTapLike(cell: ImagesListCell, indexPath: IndexPath) {
         let photo = photos[indexPath.row]
-        photo.isLiked ? UIBlockingProgressHUD.dislike() : UIBlockingProgressHUD.like()
+        photo.isLiked ? viewController?.setIsLoading(.dislike) : viewController?.setIsLoading(.like)
         imageListService.changeLike(photoId: photo.id, isLike: !photo.isLiked) { result in
             switch result {
             case .success:
                 self.photos = self.imageListService.photos
                 let likeImage = self.likeImage(indexPath: indexPath)
                 cell.likeButton.setImage(likeImage, for: .normal)
-                UIBlockingProgressHUD.dismiss()
+                self.viewController?.setIsLoading(.dismiss)
             case .failure:
-                UIBlockingProgressHUD.dismiss()
+                self.viewController?.setIsLoading(.dismiss)
             }
         }
     }
     
     
-    func updateTableViewAnimated() {
-        viewController?.tableView.performBatchUpdates {
-            let oldCount = photos.count
-            let newCount = imageListService.photos.count
-            photos = imageListService.photos
-            if oldCount != newCount {
-                let indexPaths = (oldCount..<newCount).map { IndexPath(row: $0, section: 0) }
-                viewController?.tableView.insertRows(at: indexPaths, with: .automatic)
-            }
-        } completion: { _ in }
-    }
+    
     
     
     func letsCountHeight(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -121,7 +120,7 @@ final class ImageListViewPresenter: ImageListViewPresenterProtocol {
         if let createdDate = photos[indexPath.row].createdAt {
             return dateFormatter.string(from: createdDate)
         } else {
-           return ""
+            return ""
         }
     }
     
@@ -136,7 +135,6 @@ final class ImageListViewPresenter: ImageListViewPresenterProtocol {
     func loadingNextPage(indexPath: IndexPath) {
         if indexPath.row + 1 == photos.count {
             imageListService.fetchPhotosNextPage()
-//            imageListService.fetchPhotosNextPage(token: OAuth2TokenStorage().token!)
         }
     }
 }

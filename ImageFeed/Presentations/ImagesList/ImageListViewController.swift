@@ -3,13 +3,15 @@ import Kingfisher
 
 public protocol ImageListViewControllerProtocol: AnyObject {
     var presenter: ImageListViewPresenterProtocol? { get set }
-    var tableView: UITableView! { get set }
+    
+    func updateTableViewAnimated()
+    func setIsLoading(_ isLoading: ProgressStatus)
 }
 
 final class ImageListViewController: UIViewController, ImageListViewControllerProtocol {
     
     // MARK: - IB Outlets
-    @IBOutlet internal weak var tableView: UITableView!
+    @IBOutlet private weak var tableView: UITableView!
     
     var presenter: ImageListViewPresenterProtocol?
     
@@ -20,10 +22,8 @@ final class ImageListViewController: UIViewController, ImageListViewControllerPr
     // MARK: - View Life Cycles
     override func viewDidLoad() {
         super.viewDidLoad()
-                
-        configure(presenter: ImageListViewPresenter())
         
-        tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+        setUpTable()
         
         presenter?.addObserver()
         presenter?.loadingPhotos()
@@ -32,7 +32,14 @@ final class ImageListViewController: UIViewController, ImageListViewControllerPr
 
 // MARK: - Private Methods
 extension ImageListViewController {
-    func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
+    
+    private func setUpTable() {
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.contentInset = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
+    }
+    
+    private func configCell(for cell: ImagesListCell, with indexPath: IndexPath) {
         
         cell.delegate = self
         
@@ -85,10 +92,11 @@ extension ImageListViewController {
 extension ImageListViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == singleViewImageSegueIdentifier {
-            let vc = segue.destination as! SingleViewImageController
-            let indexpath = sender as! IndexPath
-            let imageURL = presenter?.photos[indexpath.row].largeImageURL
-            vc.fullImageURL = URL(string: imageURL!)
+            if let vc = segue.destination as? SingleViewImageController,
+               let indexpath = sender as? IndexPath,
+               let imageURL = presenter?.photos[indexpath.row].largeImageURL {
+                vc.fullImageURL = URL(string: imageURL)
+            }
         } else {
             super.prepare(for: segue, sender: sender)
         }
@@ -103,7 +111,8 @@ extension ImageListViewController {
 
 extension ImageListViewController: ImageListCellDelegate {
     func imageListCellDidTapLike(_ cell: ImagesListCell) {
-        presenter?.didTapLike(cell: cell)
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        presenter?.didTapLike(cell: cell, indexPath: indexPath)
     }
 }
 
@@ -111,5 +120,23 @@ extension ImageListViewController {
     func configure(presenter: ImageListViewPresenterProtocol?) {
         self.presenter = presenter
         self.presenter?.viewController = self
+    }
+    
+    func updateTableViewAnimated() {
+        tableView.performBatchUpdates {
+            guard let newIndex = presenter?.updateListModel() else { return }
+            tableView.insertRows(at: newIndex, with: .automatic)
+        } completion: { _ in }
+    }
+}
+
+extension ImageListViewController {
+    func setIsLoading(_ isLoading: ProgressStatus) {
+        switch isLoading {
+        case .show: UIBlockingProgressHUD.show()
+        case .dismiss: UIBlockingProgressHUD.dismiss()
+        case .like: UIBlockingProgressHUD.like()
+        case .dislike: UIBlockingProgressHUD.dislike()
+        }
     }
 }

@@ -15,7 +15,6 @@ final class ImageListService {
     private let token = OAuth2TokenStorage().token
     
     // MARK: - Public Methods
-//    func fetchPhotosNextPage(token: String) {
     func fetchPhotosNextPage() {
         assert(Thread.isMainThread)
         guard task == nil else { return }
@@ -25,8 +24,6 @@ final class ImageListService {
             DispatchQueue.main.async { [self] in
                 switch result {
                 case .success(let photoResult):
-                    // Обработка успешного результата
-                    //                    print("Вот токен: \(OAuth2TokenStorage().token ?? "ooops") Результат загрузки фоток успешный")
                     let array = photoResult.map {Photo(from: $0) }
                     self.photos += array
                     NotificationCenter.default.post(
@@ -35,7 +32,6 @@ final class ImageListService {
                         userInfo: ["Photos": self.photos])
                 case .failure(let error):
                     print("Ошибка: \(error)")
-                    // Обработка ошибки
                 }
                 self.task = nil
             }
@@ -104,7 +100,6 @@ final class ImageListService {
             httpMethod: "\(method)")
         if let token = token { request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         } else { print("Token not found for makeLikeRequest") }
-        //       request.setValue("Bearer \(token!)", forHTTPHeaderField: "Authorization")
         return request
     }
 }

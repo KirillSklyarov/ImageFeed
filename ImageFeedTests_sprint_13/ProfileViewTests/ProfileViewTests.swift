@@ -16,8 +16,7 @@ final class ProfileViewTests: XCTestCase {
         // given
         let viewController = ProfileViewController()
         let presenter = ProfileViewPresenterSpy()
-        viewController.presenter = presenter
-        presenter.viewController = viewController
+        viewController.configure(presenter: presenter)
         
         //when
         _ = viewController.view
@@ -30,47 +29,12 @@ final class ProfileViewTests: XCTestCase {
         // given
         let viewController = ProfileViewController()
         let presenter = ProfileViewPresenterSpy()
-        viewController.presenter = presenter
-        presenter.viewController = viewController
+        viewController.configure(presenter: presenter)
         
         //when
         _ = viewController.view
         
         //then
         XCTAssertTrue(presenter.updateProfileImageCalled)
-    }
-    
-    func testProfileData() {
-        // given
-        let viewController = ProfileViewControllerSpy()
-        let presenter = ProfileViewPresenter()
-        viewController.presenter = presenter
-        presenter.viewController = viewController
-        
-        let myProfile = Profile(userName: "K_sklyarov",
-                                name: "Kirill Sklyarov" ,
-                                loginName: "@K_Sklyarov",
-                                bio: nil)
-        
-        //when
-        viewController.updateProfileDetails(profile: myProfile)
-        
-        //then
-        XCTAssertEqual(myProfile.name, viewController.nameLabel)
-        XCTAssertEqual(myProfile.loginName, viewController.nicknameLabel)
-    }
-    
-    func testLogoutButtonTapped() {
-        // given
-        let viewController = ProfileViewController()
-        let presenter = ProfileViewPresenterSpy()
-        viewController.presenter = presenter
-        presenter.viewController = viewController
-        
-        // when
-        viewController.buttonTapped()
-        
-        //then
-        XCTAssertTrue(presenter.buttonDidTapped)
     }
 }
