@@ -15,27 +15,23 @@ final class ImageListService {
     private let token = OAuth2TokenStorage().token
     
     // MARK: - Public Methods
-    func fetchPhotosNextPage(token: String) {
+    func fetchPhotosNextPage() {
         assert(Thread.isMainThread)
         guard task == nil else { return }
-        let request = makePhotosRequest(token: token)
+        let request = makePhotosRequest(token: OAuth2TokenStorage().token!)
         let task = URLSession.shared.arrayObjectTask(for: request) { [weak self] (result: Result<[PhotoResult], Error>) -> Void in
             guard let self = self else { return }
             DispatchQueue.main.async { [self] in
                 switch result {
                 case .success(let photoResult):
-                    // Обработка успешного результата
-                    //                    print("Вот токен: \(OAuth2TokenStorage().token ?? "ooops") Результат загрузки фоток успешный")
                     let array = photoResult.map {Photo(from: $0) }
                     self.photos += array
-                    //                    print(self.photos)
                     NotificationCenter.default.post(
                         name: ImageListService.didChangeNotification,
                         object: self,
                         userInfo: ["Photos": self.photos])
                 case .failure(let error):
                     print("Ошибка: \(error)")
-                    // Обработка ошибки
                 }
                 self.task = nil
             }
@@ -88,7 +84,7 @@ final class ImageListService {
         let pageNumber = photos.count / 10 + 1
         var request = URLRequest.makeHTTPRequest(
             path: "/photos/"
-            + "?client_id=\(Constants.accessKey)"
+            + "?client_id=\(AuthConfiguration.standart.accessKey)"
             + "&page=\(pageNumber)",
             httpMethod: "GET")
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
@@ -104,7 +100,6 @@ final class ImageListService {
             httpMethod: "\(method)")
         if let token = token { request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         } else { print("Token not found for makeLikeRequest") }
-        //       request.setValue("Bearer \(token!)", forHTTPHeaderField: "Authorization")
         return request
     }
 }

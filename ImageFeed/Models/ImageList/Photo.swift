@@ -1,13 +1,13 @@
 import Foundation
 
-struct Photo {
+public struct Photo {
     let id: String
     let size: CGSize
-    let createdAt: Date?
+    public let createdAt: Date?
     let welcomeDescription: String?
-    let thumbImageURL: String
+    public let thumbImageURL: String
     let largeImageURL: String
-    var isLiked: Bool
+    public var isLiked: Bool
         
     static let dateFormatter = ISO8601DateFormatter()
     

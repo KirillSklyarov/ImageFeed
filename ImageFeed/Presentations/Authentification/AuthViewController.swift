@@ -27,6 +27,9 @@ final class AuthViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .ypBackground
         view.addSubview(authLogo)
+        
+        view.accessibilityIdentifier = "AuthViewController"
+        uiButton.accessibilityIdentifier = "Autentificate"
         authLogo.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
@@ -70,9 +73,14 @@ extension AuthViewController: WebViewControllerDelegate {
 extension AuthViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == showWebViewSegueIdentifier {
-            guard let webViewViewController = segue.destination as? WebViewViewController
-            else { fatalError("Failed to prepare for \(showWebViewSegueIdentifier)") }
-            webViewController = webViewViewController
+            guard let webViewViewController = segue.destination as? WebViewViewController else {
+                assertionFailure("Failed to prepare for \(showWebViewSegueIdentifier)")
+                return
+            }
+            let authHelper = AuthHelper()
+            let webViewPresenter = WebViewPresenter(authHelper: authHelper)
+            webViewViewController.presenter = webViewPresenter
+            webViewPresenter.view = webViewViewController
             webViewViewController.delegate = self
         } else {
             super.prepare(for: segue, sender: sender)

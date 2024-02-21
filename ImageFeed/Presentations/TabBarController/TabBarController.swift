@@ -6,14 +6,19 @@ final class TabBarController: UITabBarController {
         super.awakeFromNib()
         
         let storyboard = UIStoryboard(name: "Main", bundle: .main)
-        let imagesListViewController = storyboard.instantiateViewController(withIdentifier: "ImagesListViewController")
+        let imageListViewController = storyboard.instantiateViewController(withIdentifier: "ImageListViewController") as! ImageListViewController
+        let presenter = ImageListViewPresenter()
+        imageListViewController.configure(presenter: presenter)
 
         let profileViewController = ProfileViewController()
+        let profileViewPresenter = ProfileViewPresenter()
+        profileViewController.configure(presenter: profileViewPresenter)
+        
         profileViewController.tabBarItem = UITabBarItem(
             title: nil,
             image: UIImage(named: "active_1"),
             selectedImage: nil)
         
-        self.viewControllers = [imagesListViewController, profileViewController]
+        self.viewControllers = [imageListViewController, profileViewController]
     }
 }

@@ -33,12 +33,12 @@ final class SplashViewController: UIViewController {
             splashImage.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
         
-                let authKey = "auth07"
-                if !UserDefaults.standard.bool(forKey: authKey) {
-                    KeychainWrapper.standard.removeObject(forKey: "bearerToken")
-                    UserDefaults.standard.setValue(true, forKey: authKey)
-                }
-                
+        let authKey = "auth07"
+        if !UserDefaults.standard.bool(forKey: authKey) {
+            KeychainWrapper.standard.removeObject(forKey: "bearerToken")
+            UserDefaults.standard.setValue(true, forKey: authKey)
+        }
+        
         if let token = oauth2TokenStorage.token {
             fetchProfile(token: token)
         } else {
@@ -77,7 +77,9 @@ extension SplashViewController: AuthViewControllerDelegate {
 extension SplashViewController {
     private func switchToTabBarController() {
         guard let window = UIApplication.shared.windows.first,
-              let tabBarController = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(identifier: "TabBarViewController") as? TabBarController else { fatalError("Invalid Configuration") }
+              let tabBarController = UIStoryboard(name: "Main", bundle: .main).instantiateViewController(identifier: "TabBarViewController") as? TabBarController else { assertionFailure("Invalid Configuration")
+            return
+        }
         window.rootViewController = tabBarController
         window.makeKeyAndVisible()
     }
